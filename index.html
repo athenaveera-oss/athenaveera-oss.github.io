@@ -6,583 +6,469 @@
 <title>Athena Veerasuntharam</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
   :root {
-    --bg: #0d1221;
-    --panel: #111827;
-    --ink: #d8cfc4;
-    --muted: #6b7280;
-    --gold: #c9a84c;
-    --gold-dim: #a07830;
-    --rule: #1e2a3a;
-    --serif: 'DM Serif Display', Georgia, serif;
-    --sans: 'DM Sans', system-ui, sans-serif;
+    --bg: #05071a;
+    --ink: #e9e4d8;
+    --body: #cfc9bb;
+    --gold: #e8c34a;
+    --gold-dim: rgba(201, 164, 60, 0.38);
+    --muted: #7d8196;
+    --serif: 'Cormorant Garamond', 'EB Garamond', Georgia, serif;
+    --mono: 'JetBrains Mono', ui-monospace, monospace;
   }
 
-  html { scroll-behavior: smooth; }
+  html, body { height: 100%; }
 
   body {
-    background: var(--bg);
-    color: var(--ink);
-    font-family: var(--sans);
-    font-weight: 300;
-    font-size: 15px;
-    line-height: 1.85;
-    overflow-x: hidden;
-    min-height: 100vh;
+    background:
+      radial-gradient(ellipse at 18% 70%, rgba(32, 34, 92, 0.55) 0%, transparent 55%),
+      radial-gradient(ellipse at 80% 30%, rgba(10, 12, 40, 0.9) 0%, transparent 60%),
+      var(--bg);
+    color: var(--body);
+    font-family: var(--serif);
+    font-size: 21px;
+    line-height: 1.45;
+    overflow: hidden;
   }
 
-  /* ── CANVAS ── */
   #canvas {
     position: fixed;
     inset: 0;
     z-index: 0;
     cursor: grab;
   }
-  #canvas:active { cursor: grabbing; }
 
-  /* ── LAYOUT ── */
-  main {
-    position: relative;
-    z-index: 10;
-    pointer-events: none;
-    padding: 2.5rem 2rem 6rem;
-    min-height: 100vh;
-  }
-
-  /* ── NAME HEADER ── */
-  .hero {
+  /* ── NAME ── */
+  .name {
+    position: fixed;
+    top: 4.2vh;
+    left: 0; right: 0;
     text-align: center;
-    padding: 3rem 0 4rem;
+    z-index: 5;
     pointer-events: none;
-  }
-
-  .hero-name {
     font-family: var(--serif);
-    font-size: clamp(2rem, 5vw, 3.2rem);
     font-weight: 400;
+    font-size: clamp(1.9rem, 3.2vw, 2.7rem);
     letter-spacing: 0.04em;
     color: var(--ink);
   }
-
-  .hero-name em {
-    font-style: italic;
-    color: var(--gold);
-  }
+  .name em { color: var(--gold); font-style: italic; font-weight: 400; letter-spacing: 0.02em; }
 
   /* ── PANEL ── */
   .panel {
-    pointer-events: all;
-    background: rgba(14, 20, 38, 0.82);
-    border: 1px solid var(--rule);
-    border-radius: 3px;
-    padding: 0;
-    max-width: 440px;
-    margin-left: 0;
-    backdrop-filter: blur(6px);
-  }
-
-  /* ── SECTION ── */
-  .section { border-bottom: 1px solid var(--rule); }
-  .section:last-child { border-bottom: none; }
-
-  .section-toggle {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    cursor: pointer;
-    padding: 1.1rem 1.4rem;
-    user-select: none;
-  }
-
-  .section-toggle h2 {
-    font-family: var(--serif);
-    font-size: 1.05rem;
-    font-weight: 400;
-    font-style: italic;
-    color: var(--ink);
-    letter-spacing: 0.01em;
-  }
-
-  .toggle-btn {
-    width: 22px;
-    height: 22px;
-    border: 1px solid var(--rule);
-    border-radius: 2px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 0.9rem;
-    color: var(--muted);
-    flex-shrink: 0;
-    background: transparent;
-  }
-
-  .section-body {
-    overflow: hidden;
-    transition: max-height 0.4s cubic-bezier(0.4,0,0.2,1);
-    max-height: 2000px;
-  }
-
-  .section-body.collapsed { max-height: 0; }
-
-  /* ── BULLET LIST ── */
-  .bullet-list {
-    list-style: none;
-    padding: 0.25rem 1.4rem 1.2rem;
-  }
-
-  .bullet-list li {
-    display: flex;
-    gap: 0.9rem;
-    padding: 0.55rem 0;
-    border-bottom: 1px solid var(--rule);
-    color: #a09890;
-    font-size: 0.9rem;
-    line-height: 1.75;
-    align-items: flex-start;
-  }
-
-  .bullet-list li:last-child { border-bottom: none; }
-
-  .bullet-list li::before {
-    content: '—';
-    color: var(--muted);
-    flex-shrink: 0;
-    margin-top: 0.05rem;
-  }
-
-  .bullet-list em {
-    font-style: italic;
-    color: var(--gold);
-    font-family: var(--serif);
-  }
-
-  /* ── WORK ITEMS ── */
-  .work-list { padding: 0.25rem 1.4rem 1.2rem; }
-
-  .work-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    padding: 0.75rem 0;
-    border-bottom: 1px solid var(--rule);
-    text-decoration: none;
-    gap: 1rem;
-    transition: opacity 0.2s;
-    pointer-events: all;
-  }
-
-  .work-item:last-child { border-bottom: none; }
-  .work-item:hover { opacity: 0.65; }
-
-  .work-tag {
-    font-size: 0.68rem;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--muted);
-    margin-bottom: 0.2rem;
-  }
-
-  .work-title {
-    font-family: var(--serif);
-    font-style: italic;
-    font-size: 1rem;
-    color: var(--gold);
-    margin-bottom: 0.15rem;
-  }
-
-  .work-desc { font-size: 0.83rem; color: #6b7280; line-height: 1.6; }
-  .work-arrow { color: var(--muted); font-size: 0.9rem; margin-top: 0.3rem; flex-shrink: 0; }
-
-  /* ── CONTACT ── */
-  .contact-list { list-style: none; padding: 0.25rem 1.4rem 1.2rem; }
-
-  .contact-list li {
-    display: flex;
-    justify-content: space-between;
-    padding: 0.6rem 0;
-    border-bottom: 1px solid var(--rule);
-    font-size: 0.875rem;
-  }
-
-  .contact-list li:last-child { border-bottom: none; }
-
-  .contact-label {
-    font-size: 0.72rem;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--muted);
-    align-self: center;
-  }
-
-  .contact-value { color: var(--ink); text-decoration: none; transition: color 0.2s; }
-  .contact-value:hover { color: var(--gold); }
-
-  /* ── DOTS NAV ── */
-  .dots {
-    display: flex;
-    gap: 0.6rem;
-    padding: 1rem 1.4rem;
-    border-top: 1px solid var(--rule);
-  }
-
-  .dot {
-    width: 7px; height: 7px;
-    border-radius: 50%;
-    background: var(--gold);
-    opacity: 0.25;
-    cursor: pointer;
-    transition: opacity 0.2s;
-  }
-
-  .dot.active { opacity: 1; }
-  .dot:hover { opacity: 0.6; }
-
-  /* ── BOTTOM RIGHT ── */
-  .bottom-right {
     position: fixed;
-    bottom: 2rem;
-    right: 2rem;
-    text-align: right;
-    z-index: 20;
-    pointer-events: none;
-  }
-
-  .coords {
-    font-size: 0.72rem;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--muted);
-    margin-bottom: 0.4rem;
-  }
-
-  .drag-hint {
+    left: 4vw;
+    top: 19vh;
+    width: min(440px, 92vw);
+    max-height: 76vh;
+    z-index: 10;
+    background: linear-gradient(180deg, rgba(14, 16, 48, 0.88), rgba(9, 11, 36, 0.9));
+    border: 1px solid var(--gold-dim);
+    border-radius: 2px;
+    padding: 2.6rem 1.9rem 1.3rem;
     display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    gap: 0.5rem;
-    font-size: 0.68rem;
+    flex-direction: column;
+    backdrop-filter: blur(4px);
+    transition: max-height 0.4s ease, padding 0.4s ease;
+  }
+
+  .panel.min {
+    max-height: 4.6rem;
+    padding-bottom: 0;
+    overflow: hidden;
+  }
+  .panel.min .pages, .panel.min .dots { opacity: 0; pointer-events: none; }
+
+  .min-btn {
+    position: absolute;
+    top: 1.05rem; right: 1.05rem;
+    width: 30px; height: 30px;
+    border: 1px solid var(--gold-dim);
+    border-radius: 3px;
+    background: transparent;
+    color: var(--body);
+    font-family: var(--mono);
+    font-size: 0.95rem;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: border-color 0.2s, color 0.2s;
+  }
+  .min-btn:hover { border-color: var(--gold); color: var(--gold); }
+
+  .pages {
+    position: relative;
+    overflow-y: auto;
+    flex: 1;
+    scrollbar-width: none;
+    transition: opacity 0.25s;
+  }
+  .pages::-webkit-scrollbar { display: none; }
+
+  .page { display: none; animation: fade 0.45s ease; }
+  .page.active { display: block; }
+  @keyframes fade { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+
+  .page h2 {
+    font-family: var(--serif);
+    font-style: italic;
+    font-weight: 400;
+    font-size: 1.75rem;
+    color: var(--ink);
+    margin-bottom: 1.35rem;
+  }
+
+  .page ul { list-style: none; }
+
+  .page li {
+    position: relative;
+    padding-left: 2.1rem;
+    margin-bottom: 1.05rem;
+    font-size: 1.12rem;
+    line-height: 1.45;
+    color: var(--body);
+  }
+  .page li::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0.78em;
+    width: 0.95rem; height: 1px;
+    background: var(--gold);
+    opacity: 0.75;
+  }
+
+  .page em { color: var(--gold); font-style: italic; }
+  .page a { color: var(--gold); font-style: italic; text-decoration: none; border-bottom: 1px solid var(--gold-dim); transition: border-color 0.2s; }
+  .page a:hover { border-color: var(--gold); }
+
+  .meta {
+    display: block;
+    font-family: var(--mono);
+    font-size: 0.62rem;
     letter-spacing: 0.14em;
     text-transform: uppercase;
     color: var(--muted);
+    margin-top: 0.15rem;
   }
 
-  .drag-dot {
-    width: 5px; height: 5px;
-    border-radius: 50%;
-    background: var(--gold);
-    opacity: 0.7;
+  /* ── DOTS ── */
+  .dots {
+    display: flex;
+    justify-content: center;
+    gap: 1.55rem;
+    padding-top: 1.4rem;
+    margin-top: 0.6rem;
+    border-top: 1px solid rgba(201, 164, 60, 0.18);
+    transition: opacity 0.25s;
   }
+  .dot {
+    width: 9px; height: 9px;
+    border-radius: 50%;
+    background: #3a3d55;
+    border: none;
+    cursor: pointer;
+    transition: background 0.25s, box-shadow 0.25s;
+  }
+  .dot:hover { background: #6a6d85; }
+  .dot.active { background: var(--gold); box-shadow: 0 0 10px rgba(232, 195, 74, 0.7); }
+
+  /* ── BOTTOM RIGHT ── */
+  .corner {
+    position: fixed;
+    right: 2.2vw; bottom: 2.4vh;
+    z-index: 5;
+    text-align: right;
+    pointer-events: none;
+    font-family: var(--mono);
+    font-weight: 300;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .coords { font-size: 0.82rem; letter-spacing: 0.32em; margin-bottom: 0.9rem; }
+  .hint { font-size: 0.74rem; letter-spacing: 0.34em; display: flex; justify-content: flex-end; align-items: center; gap: 0.7rem; }
+  .hint i { width: 5px; height: 5px; border-radius: 50%; background: var(--gold); display: inline-block; box-shadow: 0 0 6px var(--gold); }
 
   /* ── TOOLTIP ── */
-  #tooltip {
+  #tip {
     position: fixed;
+    z-index: 30;
     pointer-events: none;
-    z-index: 300;
-    background: rgba(14,20,38,0.95);
-    border: 1px solid var(--rule);
+    padding: 0.35rem 0.8rem;
+    background: rgba(9, 11, 36, 0.95);
+    border: 1px solid var(--gold-dim);
     color: var(--gold);
-    font-family: var(--sans);
-    font-size: 0.75rem;
-    padding: 0.4rem 0.75rem;
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 1.05rem;
     border-radius: 2px;
     opacity: 0;
     transition: opacity 0.15s;
     white-space: nowrap;
   }
 
-  @media (max-width: 600px) {
-    .panel { max-width: 100%; }
-    main { padding: 1.5rem 1rem 6rem; }
+  @media (max-width: 700px) {
+    body { font-size: 18px; }
+    .panel { left: 4vw; right: 4vw; width: auto; top: 16vh; max-height: 70vh; padding: 2.4rem 1.3rem 1rem; }
+    .corner { display: none; }
   }
 </style>
 </head>
 <body>
 
 <canvas id="canvas"></canvas>
-<div id="tooltip"></div>
+<div id="tip"></div>
 
-<main>
-  <div class="hero">
-    <h1 class="hero-name">Athena <em>Veerasuntharam</em></h1>
+<h1 class="name">Athena <em>Veerasuntharam</em></h1>
+
+<aside class="panel" id="panel">
+  <button class="min-btn" id="minBtn" aria-label="Collapse panel">−</button>
+
+  <div class="pages" id="pages">
+
+    <section class="page active">
+      <h2>About me.</h2>
+      <ul>
+        <li>I'm a <em>Communication Designer</em> studying <em>Graphic Communications Management</em> at Toronto Metropolitan University, with a minor in French.</li>
+        <li>I care about <em>accessible, community-driven design</em> — good design should work for the people who need it most.</li>
+        <li>I grew up in <em>Scarborough, Toronto</em>, and I'm proud of where I come from.</li>
+        <li>When I'm not designing, I'm probably reading <em>historical fiction</em> or getting lost in <em>art history</em>.</li>
+        <li>Always happy to chat — <em>click a star</em> to say hi.</li>
+      </ul>
+    </section>
+
+    <section class="page">
+      <h2>Education.</h2>
+      <ul>
+        <li><em>Toronto Metropolitan University</em> — Bachelor of Technology, Graphic Communications Management, French minor.
+          <span class="meta">Graduating May 2028</span></li>
+        <li>Focus on <em>product design &amp; development</em> and <em>UX</em>.</li>
+        <li><em>York University</em> — User Experience Design Certificate.
+          <span class="meta">June 2023</span></li>
+      </ul>
+    </section>
+
+    <section class="page">
+      <h2>Selected work.</h2>
+      <ul>
+        <li><em>Urban gardening platform</em> — as UX designer and researcher with Brandon's Parks and Recreation Department, I launched a peer-to-peer platform for a municipal pilot, turning food-security and accessibility goals into a community-driven design.
+          <span class="meta">Brandon, Manitoba · 2023</span></li>
+        <li><em>ARTS SIG Conference</em> — event organizer for a large academic conference at TMU, coordinating programming, registration and on-site operations with faculty, volunteers and attendees.
+          <span class="meta">Toronto, ON · May 2025</span></li>
+        <li>I'm a <em>City of Toronto cultural events volunteer</em>, and I was an <em>art interpreter at Nuit Blanche</em>.</li>
+      </ul>
+    </section>
+
+    <section class="page">
+      <h2>What I'm working on.</h2>
+      <ul>
+        <li>I'm the <em>Editorial Director</em> of the <em>TMUTAGA Collective</em>, the research journal published by Graphic Communications Management students, where I select the strongest thesis papers for publication.</li>
+        <li>Finishing my degree at <em>TMU</em> while building out my design portfolio.</li>
+        <li>Exploring how <em>public-facing cultural design</em> shapes the way people experience art and history.</li>
+      </ul>
+    </section>
+
+    <section class="page">
+      <h2>Say hi.</h2>
+      <ul>
+        <li>Email me at <a href="mailto:athenaveera@gmail.com">athenaveera@gmail.com</a>.</li>
+        <li>I'm open to <em>design, communications, and marketing</em> opportunities, and always happy to talk design.</li>
+        <li>Or just <em>click a star</em> — it'll open an email to me.</li>
+      </ul>
+    </section>
+
   </div>
 
-  <div class="panel">
+  <nav class="dots" id="dots">
+    <button class="dot active" aria-label="About me"></button>
+    <button class="dot" aria-label="Education"></button>
+    <button class="dot" aria-label="Selected work"></button>
+    <button class="dot" aria-label="What I'm working on"></button>
+    <button class="dot" aria-label="Say hi"></button>
+  </nav>
+</aside>
 
-    <section class="section">
-      <div class="section-toggle" onclick="toggle(this)">
-        <h2>About me.</h2>
-        <div class="toggle-btn">−</div>
-      </div>
-      <div class="section-body">
-        <ul class="bullet-list">
-          <li><span>I'm a <em>UX & product designer</em> — update this with your story. What do you do and what drives you?</span></li>
-          <li><span>Before design, I studied / worked in <em>your background</em> — that perspective shapes how I think about every problem.</span></li>
-          <li><span>I care deeply about <em>accessible, inclusive design</em>. Good UX should work for everyone.</span></li>
-          <li><span>I grew up in <em>Scarborough, Toronto</em> as a first-gen kid — proud of where I come from.</span></li>
-          <li><span>When I'm not designing — I'm probably <em>add your hobbies here</em>.</span></li>
-          <li><span>Always happy to connect — <em>click a star</em> to say hi.</span></li>
-        </ul>
-      </div>
-    </section>
-
-    <section class="section">
-      <div class="section-toggle" onclick="toggle(this)">
-        <h2>Selected work.</h2>
-        <div class="toggle-btn">−</div>
-      </div>
-      <div class="section-body">
-        <div class="work-list">
-          <a href="#" class="work-item">
-            <div>
-              <p class="work-tag">UX Research · Product Design</p>
-              <p class="work-title">Project One — add your title</p>
-              <p class="work-desc">A short description of what you designed and the problem you solved.</p>
-            </div>
-            <span class="work-arrow">→</span>
-          </a>
-          <a href="#" class="work-item">
-            <div>
-              <p class="work-tag">Design Systems · UI</p>
-              <p class="work-title">Project Two — add your title</p>
-              <p class="work-desc">A short description of what you designed and the problem you solved.</p>
-            </div>
-            <span class="work-arrow">→</span>
-          </a>
-          <a href="#" class="work-item">
-            <div>
-              <p class="work-tag">Interaction Design</p>
-              <p class="work-title">Project Three — add your title</p>
-              <p class="work-desc">A short description of what you designed and the problem you solved.</p>
-            </div>
-            <span class="work-arrow">→</span>
-          </a>
-        </div>
-      </div>
-    </section>
-
-    <section class="section">
-      <div class="section-toggle" onclick="toggle(this)">
-        <h2>What I'm working on.</h2>
-        <div class="toggle-btn">−</div>
-      </div>
-      <div class="section-body">
-        <ul class="bullet-list">
-          <li><span>Building out my <em>design portfolio</em> — documenting the thinking and process behind my work.</span></li>
-          <li><span><em>Add something here</em> — a project, a side project, something you're exploring.</span></li>
-          <li><span>Exploring <em>your interest</em> and how it connects to design.</span></li>
-        </ul>
-      </div>
-    </section>
-
-    <section class="section">
-      <div class="section-toggle" onclick="toggle(this)">
-        <h2>Say hi — I'd love to hear from you.</h2>
-        <div class="toggle-btn">−</div>
-      </div>
-      <div class="section-body">
-        <ul class="contact-list">
-          <li>
-            <span class="contact-label">Email</span>
-            <a href="mailto:you@email.com" class="contact-value">you@email.com</a>
-          </li>
-          <li>
-            <span class="contact-label">LinkedIn</span>
-            <a href="https://linkedin.com/in/yourhandle" class="contact-value" target="_blank">linkedin.com/in/yourhandle</a>
-          </li>
-          <li>
-            <span class="contact-label">Dribbble</span>
-            <a href="https://dribbble.com/yourhandle" class="contact-value" target="_blank">dribbble.com/yourhandle</a>
-          </li>
-          <li>
-            <span class="contact-label">Resume</span>
-            <a href="#" class="contact-value">Download PDF →</a>
-          </li>
-        </ul>
-      </div>
-    </section>
-
-    <div class="dots">
-      <div class="dot active"></div>
-      <div class="dot"></div>
-      <div class="dot"></div>
-      <div class="dot"></div>
-      <div class="dot"></div>
-    </div>
-
-  </div>
-</main>
-
-<div class="bottom-right">
+<div class="corner">
   <p class="coords">N 43.7735° · W 79.2577°</p>
-  <p class="drag-hint"><div class="drag-dot"></div> Drag to explore</p>
+  <p class="hint"><i></i>Drag to explore</p>
 </div>
 
 <script>
-function toggle(header) {
-  const btn = header.querySelector('.toggle-btn');
-  const body = header.nextElementSibling;
-  const collapsed = body.classList.toggle('collapsed');
-  btn.textContent = collapsed ? '+' : '−';
-}
+// ── PANEL PAGES ──
+const pages = [...document.querySelectorAll('.page')];
+const dots = [...document.querySelectorAll('.dot')];
+dots.forEach((d, i) => d.addEventListener('click', () => {
+  pages.forEach((p, j) => p.classList.toggle('active', i === j));
+  dots.forEach((x, j) => x.classList.toggle('active', i === j));
+  document.getElementById('pages').scrollTop = 0;
+}));
 
-// ── STAR FIELD ──
+const panel = document.getElementById('panel');
+const minBtn = document.getElementById('minBtn');
+minBtn.addEventListener('click', () => {
+  const m = panel.classList.toggle('min');
+  minBtn.textContent = m ? '+' : '−';
+});
+
+// ── STARFIELD ──
 const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
-const tooltip = document.getElementById('tooltip');
+const tip = document.getElementById('tip');
+const MAIL = 'mailto:athenaveera@gmail.com';
+const MSGS = ['hey there', "let's connect", "i'd love to chat", 'say hello', 'talk design with me', 'drop me a line'];
 
+let W, H, dpr;
 function resize() {
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
+  dpr = Math.min(window.devicePixelRatio || 1, 2);
+  W = window.innerWidth; H = window.innerHeight;
+  canvas.width = W * dpr; canvas.height = H * dpr;
+  canvas.style.width = W + 'px'; canvas.style.height = H + 'px';
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 }
-resize();
-window.addEventListener('resize', () => { resize(); init(); });
 
-const MESSAGES = [
-  "hey there 👋", "let's connect!", "i'd love to chat",
-  "open to opportunities", "drop me a line", "say hello!",
-  "talk design with me", "i don't bite 🙂"
-];
-
-let stars = [], mouse = { x: -9999, y: -9999 };
-let dragging = false, dragStart = null;
-let offset = { x: 0, y: 0 }, curr = { x: 0, y: 0 };
-
+let dust = [], bright = [];
 function init() {
-  // tiny background stars
-  const bg = Array.from({ length: 120 }, () => ({
-    x: Math.random() * canvas.width,
-    y: Math.random() * canvas.height,
-    r: Math.random() * 0.7 + 0.2,
-    vx: (Math.random() - 0.5) * 0.04,
-    vy: (Math.random() - 0.5) * 0.04,
-    alpha: Math.random() * 0.35 + 0.1,
-    phase: Math.random() * Math.PI * 2,
-    speed: Math.random() * 0.001 + 0.0005,
-    clickable: false,
-    gold: false,
+  resize();
+  dust = Array.from({ length: 170 }, () => ({
+    x: Math.random() * W, y: Math.random() * H,
+    r: Math.random() * 0.9 + 0.25,
+    a: Math.random() * 0.55 + 0.15,
+    ph: Math.random() * 6.28, sp: Math.random() * 0.0012 + 0.0004,
+    vx: (Math.random() - 0.5) * 0.03, vy: (Math.random() - 0.5) * 0.03,
   }));
-
-  // bright gold clickable stars
-  const gold = Array.from({ length: MESSAGES.length }, (_, i) => ({
-    x: Math.random() * canvas.width,
-    y: Math.random() * canvas.height,
-    r: Math.random() * 2.5 + 1.5,
-    vx: (Math.random() - 0.5) * 0.06,
-    vy: (Math.random() - 0.5) * 0.06,
-    alpha: 0.85,
-    phase: Math.random() * Math.PI * 2,
-    speed: Math.random() * 0.0012 + 0.0005,
-    clickable: true,
-    gold: true,
-    msg: MESSAGES[i],
+  // a few larger gold stars on the right side, placed like a little constellation
+  const spots = [
+    [0.60, 0.36], [0.46, 0.46], [0.62, 0.62], [0.78, 0.30], [0.84, 0.70], [0.72, 0.82],
+  ];
+  bright = spots.map(([fx, fy], i) => ({
+    x: fx * W, y: fy * H,
+    r: i === 2 ? 5.2 : 3.4 + Math.random() * 1.2,
+    ph: Math.random() * 6.28, sp: 0.0011 + Math.random() * 0.0008,
+    vx: (Math.random() - 0.5) * 0.04, vy: (Math.random() - 0.5) * 0.04,
+    msg: MSGS[i],
   }));
-
-  stars = [...bg, ...gold];
 }
 init();
+window.addEventListener('resize', init);
 
+let mouse = { x: -9999, y: -9999 };
+let drag = false, ds = null, base = { x: 0, y: 0 }, off = { x: 0, y: 0 }, moved = 0;
+
+canvas.addEventListener('mousedown', e => {
+  drag = true; moved = 0;
+  ds = { x: e.clientX, y: e.clientY };
+  base = { ...off };
+});
 window.addEventListener('mousemove', e => {
   mouse.x = e.clientX; mouse.y = e.clientY;
-  if (dragging && dragStart) {
-    curr.x = offset.x + e.clientX - dragStart.x;
-    curr.y = offset.y + e.clientY - dragStart.y;
+  if (drag) {
+    off.x = base.x + e.clientX - ds.x;
+    off.y = base.y + e.clientY - ds.y;
+    moved = Math.max(moved, Math.hypot(e.clientX - ds.x, e.clientY - ds.y));
   }
 });
-canvas.addEventListener('mousedown', e => {
-  dragging = true;
-  dragStart = { x: e.clientX, y: e.clientY };
-  offset.x = curr.x; offset.y = curr.y;
-});
-window.addEventListener('mouseup', () => { dragging = false; });
-
-canvas.addEventListener('click', e => {
-  for (const s of stars) {
-    if (!s.clickable) continue;
-    if (Math.hypot(e.clientX - (s.x + curr.x), e.clientY - (s.y + curr.y)) < 14) {
-      window.location.href = 'mailto:you@email.com';
-      break;
+window.addEventListener('mouseup', e => {
+  if (drag && moved < 5) {
+    for (const s of bright) {
+      if (Math.hypot(e.clientX - (s.x + off.x), e.clientY - (s.y + off.y)) < 20) {
+        window.location.href = MAIL; break;
+      }
     }
   }
+  drag = false;
 });
 
-let hovered = null;
+// touch support for dragging
+canvas.addEventListener('touchstart', e => {
+  const t = e.touches[0];
+  drag = true; moved = 0; ds = { x: t.clientX, y: t.clientY }; base = { ...off };
+}, { passive: true });
+canvas.addEventListener('touchmove', e => {
+  const t = e.touches[0];
+  off.x = base.x + t.clientX - ds.x; off.y = base.y + t.clientY - ds.y;
+}, { passive: true });
+canvas.addEventListener('touchend', () => { drag = false; });
+
+function wrap(s, pad) {
+  if (s.x < -pad) s.x = W + pad; if (s.x > W + pad) s.x = -pad;
+  if (s.y < -pad) s.y = H + pad; if (s.y > H + pad) s.y = -pad;
+}
 
 function frame(t) {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  const ox = curr.x, oy = curr.y;
+  ctx.clearRect(0, 0, W, H);
+  const ox = off.x, oy = off.y;
 
-  for (const s of stars) {
-    s.x += s.vx; s.y += s.vy;
-    if (s.x < -200) s.x = canvas.width + 200;
-    if (s.x > canvas.width + 200) s.x = -200;
-    if (s.y < -200) s.y = canvas.height + 200;
-    if (s.y > canvas.height + 200) s.y = -200;
+  // dust
+  for (const s of dust) {
+    s.x += s.vx; s.y += s.vy; wrap(s, 40);
+    const tw = 0.65 + 0.35 * Math.sin(t * s.sp + s.ph);
+    ctx.beginPath();
+    ctx.arc(s.x + ox * 0.35, s.y + oy * 0.35, s.r, 0, 6.283);
+    ctx.fillStyle = `rgba(215, 220, 240, ${s.a * tw})`;
+    ctx.fill();
   }
 
-  // constellation lines between gold stars only
-  const golds = stars.filter(s => s.gold);
-  for (let i = 0; i < golds.length; i++) {
-    for (let j = i + 1; j < golds.length; j++) {
-      const d = Math.hypot(golds[i].x - golds[j].x, golds[i].y - golds[j].y);
-      if (d < 200) {
-        const a = (1 - d / 200) * 0.18;
-        ctx.strokeStyle = `rgba(180,140,60,${a})`;
+  // move bright
+  for (const s of bright) { s.x += s.vx; s.y += s.vy; wrap(s, 120); }
+
+  // gold lines from the panel's right edge to the first three stars
+  const pr = panel.getBoundingClientRect();
+  const anchors = [0.22, 0.36, 0.62];
+  ctx.lineWidth = 0.8;
+  for (let i = 0; i < 3; i++) {
+    const s = bright[i];
+    const ax = pr.right, ay = pr.top + pr.height * anchors[i];
+    ctx.strokeStyle = 'rgba(201, 164, 60, 0.55)';
+    ctx.beginPath();
+    ctx.moveTo(ax, ay);
+    ctx.lineTo(s.x + ox, s.y + oy);
+    ctx.stroke();
+  }
+  // faint links between the stars themselves
+  for (let i = 0; i < bright.length; i++) {
+    for (let j = i + 1; j < bright.length; j++) {
+      const a = bright[i], b = bright[j];
+      const d = Math.hypot(a.x - b.x, a.y - b.y);
+      if (d < 260) {
+        ctx.strokeStyle = `rgba(201, 164, 60, ${(1 - d / 260) * 0.22})`;
         ctx.lineWidth = 0.6;
         ctx.beginPath();
-        ctx.moveTo(golds[i].x + ox, golds[i].y + oy);
-        ctx.lineTo(golds[j].x + ox, golds[j].y + oy);
+        ctx.moveTo(a.x + ox, a.y + oy);
+        ctx.lineTo(b.x + ox, b.y + oy);
         ctx.stroke();
       }
     }
   }
 
-  hovered = null;
-  for (const s of stars) {
-    const sx = s.x + ox, sy = s.y + oy;
-    const md = Math.hypot(mouse.x - sx, mouse.y - sy);
-    const pulse = Math.sin(t * s.speed + s.phase) * 0.25 + 0.75;
-    const isH = md < 14 && s.clickable;
-    if (isH) hovered = s;
-
-    if (s.gold) {
-      // glow
-      const glow = ctx.createRadialGradient(sx, sy, 0, sx, sy, isH ? 18 : 10);
-      glow.addColorStop(0, `rgba(210,165,60,${isH ? 0.9 : 0.7 * pulse})`);
-      glow.addColorStop(0.4, `rgba(180,130,40,${isH ? 0.4 : 0.25 * pulse})`);
-      glow.addColorStop(1, 'rgba(180,130,40,0)');
-      ctx.beginPath();
-      ctx.arc(sx, sy, isH ? 18 : 10, 0, Math.PI * 2);
-      ctx.fillStyle = glow;
-      ctx.fill();
-
-      // core
-      ctx.beginPath();
-      ctx.arc(sx, sy, isH ? s.r * 2 : s.r * pulse, 0, Math.PI * 2);
-      ctx.fillStyle = isH ? '#ffe090' : `rgba(220,175,80,${s.alpha * pulse})`;
-      ctx.fill();
-    } else {
-      ctx.beginPath();
-      ctx.arc(sx, sy, s.r * pulse, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(200,210,230,${s.alpha * pulse})`;
-      ctx.fill();
-    }
+  // bright stars
+  let hover = null;
+  for (const s of bright) {
+    const x = s.x + ox, y = s.y + oy;
+    const h = Math.hypot(mouse.x - x, mouse.y - y) < 20;
+    if (h) hover = s;
+    const pulse = 0.82 + 0.18 * Math.sin(t * s.sp + s.ph);
+    const R = (h ? 5.2 : 3.6) * s.r * pulse;
+    const g = ctx.createRadialGradient(x, y, 0, x, y, R * 2.4);
+    g.addColorStop(0, 'rgba(255, 224, 140, 0.95)');
+    g.addColorStop(0.18, 'rgba(240, 185, 60, 0.7)');
+    g.addColorStop(0.5, 'rgba(200, 140, 40, 0.18)');
+    g.addColorStop(1, 'rgba(200, 140, 40, 0)');
+    ctx.beginPath(); ctx.arc(x, y, R * 2.4, 0, 6.283); ctx.fillStyle = g; ctx.fill();
+    ctx.beginPath(); ctx.arc(x, y, s.r * 0.75, 0, 6.283);
+    ctx.fillStyle = h ? '#fff6d0' : '#ffe9a8'; ctx.fill();
   }
 
-  if (hovered) {
-    const sx = hovered.x + ox, sy = hovered.y + oy;
-    tooltip.textContent = hovered.msg;
-    tooltip.style.left = (sx + 16) + 'px';
-    tooltip.style.top = (sy - 12) + 'px';
-    tooltip.style.opacity = '1';
+  if (hover && !drag) {
+    tip.textContent = hover.msg;
+    tip.style.left = (hover.x + ox + 22) + 'px';
+    tip.style.top = (hover.y + oy - 14) + 'px';
+    tip.style.opacity = 1;
     canvas.style.cursor = 'pointer';
   } else {
-    tooltip.style.opacity = '0';
-    canvas.style.cursor = dragging ? 'grabbing' : 'grab';
+    tip.style.opacity = 0;
+    canvas.style.cursor = drag ? 'grabbing' : 'grab';
   }
 
   requestAnimationFrame(frame);
