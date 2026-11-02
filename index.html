@@ -25,7 +25,8 @@
 
   body {
     background:
-      radial-gradient(ellipse at 14% 78%, rgba(30, 32, 88, 0.5) 0%, transparent 55%),
+      radial-gradient(ellipse at 64% 44%, rgba(16, 20, 60, 0.6) 0%, transparent 52%),
+      radial-gradient(ellipse at 14% 78%, rgba(30, 32, 88, 0.45) 0%, transparent 55%),
       radial-gradient(ellipse at 75% 30%, rgba(8, 10, 36, 0.9) 0%, transparent 60%),
       var(--bg);
     color: var(--body);
@@ -318,7 +319,7 @@
 </aside>
 
 <div class="corner">
-  <p class="coords">N 43.7735° · W 79.2577°</p>
+  <p class="coords" id="coords">N 43.7735° · W 79.2577°</p>
   <p class="hint"><i></i>Drag to explore</p>
 </div>
 
@@ -351,14 +352,25 @@ window.addEventListener('keydown', e => {
   if (e.key === 'ArrowLeft') go((cur + 4) % 5);
 });
 
-// ── SKY ──
+// ── SKY: a small 3D universe that rotates when you drag ──
 const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
 const tagsEl = document.getElementById('tags');
+const coordsEl = document.getElementById('coords');
 const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-// the constellation: one star per page, drawn as a small kite
-const U = [[-0.9, 0.15], [-0.35, -0.45], [0.25, 0.1], [0.75, -0.35], [0.95, 0.45]];
+const F = 1000, D = 1000;               // focal length, camera distance from the pivot
+const rnd = (a, b) => a + Math.random() * (b - a);
+const gauss = () => (Math.random() + Math.random() + Math.random() + Math.random() - 2) * 2;
+function inSphere(R) {
+  for (;;) {
+    const x = rnd(-R, R), y = rnd(-R, R), z = rnd(-R, R);
+    if (x * x + y * y + z * z <= R * R) return [x, y, z];
+  }
+}
+
+// the constellation: one star per page, a small kite with real depth
+const U = [[-0.9, 0.15, 0.4], [-0.35, -0.45, -0.6], [0.25, 0.1, 0.1], [0.75, -0.35, -0.2], [0.95, 0.45, 0.7]];
 const EDGES = [[0, 1], [1, 2], [2, 3], [2, 4]];
 const GLOW = [30, 34, 56, 28, 38];
 
@@ -370,8 +382,29 @@ const tags = NAMES.map(n => {
   return el;
 });
 
-let W, H, dpr, dust = [], orbs = [], stars = [];
+// background stars scattered through space, with a few denser clouds
+const dust = [];
+for (let i = 0; i < 2100; i++) {
+  const [x, y, z] = inSphere(2300);
+  dust.push({ x, y, z });
+}
+for (let c = 0; c < 9; c++) {
+  const [cx, cy, cz] = inSphere(1500);
+  for (let i = 0; i < 90; i++) dust.push({ x: cx + gauss() * 150, y: cy + gauss() * 150, z: cz + gauss() * 150 });
+}
+dust.forEach(s => {
+  s.r = Math.random() * 1.0 + 0.5;
+  s.a = Math.random() * 0.65 + 0.4;
+  s.ph = Math.random() * 6.28; s.sp = Math.random() * 0.0012 + 0.0004;
+  s.warm = Math.random() < 0.12;
+});
+// big soft grey orbs
+const orbs = Array.from({ length: 5 }, () => {
+  const [x, y, z] = inSphere(1300);
+  return { x, y, z, r: 11 + Math.random() * 12, a: 0.3 + Math.random() * 0.3 };
+});
 
+let W, H, dpr, CX, CY, stars = [];
 function build() {
   dpr = Math.min(window.devicePixelRatio || 1, 2);
   W = window.innerWidth; H = window.innerHeight;
@@ -379,48 +412,44 @@ function build() {
   canvas.style.width = W + 'px'; canvas.style.height = H + 'px';
   ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-  dust = Array.from({ length: 230 }, () => ({
-    x: Math.random() * W, y: Math.random() * H,
-    r: Math.random() * 0.9 + 0.25,
-    a: Math.random() * 0.55 + 0.15,
-    ph: Math.random() * 6.28, sp: Math.random() * 0.0012 + 0.0004,
-  }));
-
-  // big soft grey orbs drifting slowly
-  orbs = Array.from({ length: 5 }, () => ({
-    x: Math.random() * W, y: Math.random() * H,
-    r: 5 + Math.random() * 8,
-    a: 0.3 + Math.random() * 0.3,
-    vx: (Math.random() - 0.5) * 0.012, vy: (Math.random() - 0.5) * 0.012,
-  }));
-
   const mobile = W < 700;
-  const cx = mobile ? W * 0.5 : W * 0.64;
-  const cy = mobile ? H * 0.27 : H * 0.44;
+  CX = mobile ? W * 0.5 : W * 0.64;
+  CY = mobile ? H * 0.27 : H * 0.44;
   const sx = mobile ? W * 0.3 : Math.min(W * 0.16, 300);
   const sy = mobile ? H * 0.1 : Math.min(H * 0.24, 210);
-
-  stars = U.map(([ux, uy], i) => ({
-    hx: cx + ux * sx, hy: cy + uy * sy, g: GLOW[i],
-    ax: 12 + Math.random() * 14, ay: 10 + Math.random() * 12,
-    wx: 0.00026 + Math.random() * 0.00018, wy: 0.0003 + Math.random() * 0.00018,
-    px: Math.random() * 6.28, py: Math.random() * 6.28,
-    x: cx + ux * sx, y: cy + uy * sy,
+  const sz = 240;
+  stars = U.map(([ux, uy, uz], i) => ({
+    hx: ux * sx, hy: uy * sy, hz: uz * sz, g: GLOW[i],
+    ax: 10 + Math.random() * 12, ay: 8 + Math.random() * 10, az: 14 + Math.random() * 16,
+    wx: 0.00026 + Math.random() * 0.00018, wy: 0.0003 + Math.random() * 0.00018, wz: 0.00022 + Math.random() * 0.00016,
+    px: Math.random() * 6.28, py: Math.random() * 6.28, pz: Math.random() * 6.28,
   }));
 }
 build();
 window.addEventListener('resize', build);
 
-// ── DRAGGING THE SKY ──
+// camera: rotate the whole universe about the pivot, then project
+let yaw = 0, pitch = 0, vYaw = 0, vPitch = 0;
+let cY = 1, sY = 0, cP = 1, sP = 0;
+function project(x, y, z) {
+  const x1 = x * cY + z * sY;
+  const z1 = -x * sY + z * cY;
+  const y2 = y * cP - z1 * sP;
+  const z2 = y * sP + z1 * cP + D;
+  if (z2 < 80) return null;
+  const k = F / z2;
+  return { x: CX + x1 * k, y: CY + y2 * k, k, z: z2 };
+}
+
+// ── DRAGGING ──
 let mouse = { x: -9999, y: -9999 };
-let drag = false, ds = null, base = null, last = null;
-let off = { x: 0, y: 0 }, vel = { x: 0, y: 0 };
-let moved = 0, lastRelease = 0;
+let drag = false, ds = null, last = null, moved = 0;
+let sp = [];   // projected star positions, refreshed every frame
 
 function hit(x, y) {
-  for (let i = 0; i < stars.length; i++) {
-    const s = stars[i];
-    if (Math.hypot(x - (s.x + off.x), y - (s.y + off.y)) < Math.max(22, s.g * 0.55)) return i;
+  for (let i = 0; i < sp.length; i++) {
+    const p = sp[i];
+    if (p && Math.hypot(x - p.x, y - p.y) < Math.max(22, stars[i].g * p.k * 0.55)) return i;
   }
   return -1;
 }
@@ -428,24 +457,23 @@ function hit(x, y) {
 canvas.addEventListener('pointerdown', e => {
   drag = true; moved = 0;
   ds = { x: e.clientX, y: e.clientY };
-  base = { x: off.x, y: off.y };
   last = { x: e.clientX, y: e.clientY };
-  vel = { x: 0, y: 0 };
+  vYaw = 0; vPitch = 0;
   try { canvas.setPointerCapture(e.pointerId); } catch (_) {}
 });
 window.addEventListener('pointermove', e => {
   mouse.x = e.clientX; mouse.y = e.clientY;
   if (!drag) return;
-  off.x = base.x + e.clientX - ds.x;
-  off.y = base.y + e.clientY - ds.y;
-  vel.x = e.clientX - last.x; vel.y = e.clientY - last.y;
+  const dx = e.clientX - last.x, dy = e.clientY - last.y;
+  yaw += dx * 0.0035;
+  pitch = Math.max(-1.1, Math.min(1.1, pitch - dy * 0.0035));
+  vYaw = dx * 0.0035; vPitch = -dy * 0.0035;
   last = { x: e.clientX, y: e.clientY };
   moved = Math.max(moved, Math.hypot(e.clientX - ds.x, e.clientY - ds.y));
 });
 canvas.addEventListener('pointerup', e => {
   if (!drag) return;
   drag = false;
-  lastRelease = performance.now();
   if (moved < 6) { const i = hit(e.clientX, e.clientY); if (i >= 0) go(i); }
 });
 canvas.addEventListener('pointercancel', () => { drag = false; });
@@ -466,106 +494,118 @@ function spawnShoot() {
   });
 }
 
+// coordinates readout follows the view
+let lastCoords = '';
+function updateCoords() {
+  const lat = Math.max(-90, Math.min(90, 43.7735 - pitch * 180 / Math.PI));
+  let lon = -79.2577 + yaw * 180 / Math.PI;
+  lon = ((lon + 180) % 360 + 360) % 360 - 180;
+  const txt = `${lat >= 0 ? 'N' : 'S'} ${Math.abs(lat).toFixed(4)}° · ${lon >= 0 ? 'E' : 'W'} ${Math.abs(lon).toFixed(4)}°`;
+  if (txt !== lastCoords) { coordsEl.textContent = txt; lastCoords = txt; }
+}
+
 // ── FRAME ──
 let lastT = 0;
 function frame(t) {
   const dt = Math.min(t - lastT, 50);
   lastT = t;
 
-  // inertia, then a slow drift back home so the constellation is never lost
   if (!drag) {
-    off.x += vel.x; off.y += vel.y;
-    vel.x *= 0.94; vel.y *= 0.94;
-    if (t - lastRelease > 2500) {
-      const k = 0.012 * dt / 16;
-      off.x -= off.x * k; off.y -= off.y * k;
-    }
+    yaw += vYaw * dt / 16;
+    pitch = Math.max(-1.1, Math.min(1.1, pitch + vPitch * dt / 16));
+    const decay = Math.pow(0.95, dt / 16);
+    vYaw *= decay; vPitch *= decay;
+    if (!reduce) yaw += 0.000012 * dt;           // a very slow idle turn
   }
-  off.x = Math.max(-W * 0.45, Math.min(W * 0.45, off.x));
-  off.y = Math.max(-H * 0.45, Math.min(H * 0.45, off.y));
+  cY = Math.cos(yaw); sY = Math.sin(yaw);
+  cP = Math.cos(pitch); sP = Math.sin(pitch);
 
   ctx.clearRect(0, 0, W, H);
 
-  // fine dust (far layer)
+  // background stars
   for (const s of dust) {
-    const x = (((s.x + off.x * 0.25) % W) + W) % W;
-    const y = (((s.y + off.y * 0.25) % H) + H) % H;
-    const tw = 0.65 + 0.35 * Math.sin(t * s.sp + s.ph);
-    ctx.beginPath(); ctx.arc(x, y, s.r, 0, 6.283);
-    ctx.fillStyle = `rgba(215,220,240,${s.a * tw})`; ctx.fill();
+    const p = project(s.x, s.y, s.z);
+    if (!p || p.x < -4 || p.x > W + 4 || p.y < -4 || p.y > H + 4) continue;
+    const tw = 0.7 + 0.3 * Math.sin(t * s.sp + s.ph);
+    const k = Math.min(p.k, 1.8);
+    const a = Math.min(1, s.a * tw * (0.5 + k * 0.6));
+    ctx.beginPath(); ctx.arc(p.x, p.y, s.r * k, 0, 6.283);
+    ctx.fillStyle = s.warm ? `rgba(255,228,170,${a})` : `rgba(215,222,245,${a})`;
+    ctx.fill();
   }
 
-  // soft grey orbs (mid layer)
+  // soft grey orbs
   for (const o of orbs) {
-    if (!reduce) { o.x += o.vx * dt; o.y += o.vy * dt; }
-    if (o.x < -40) o.x = W + 40; if (o.x > W + 40) o.x = -40;
-    if (o.y < -40) o.y = H + 40; if (o.y > H + 40) o.y = -40;
-    const x = (((o.x + off.x * 0.6) % W) + W) % W;
-    const y = (((o.y + off.y * 0.6) % H) + H) % H;
-    const g = ctx.createRadialGradient(x, y, 0, x, y, o.r * 2.2);
+    const p = project(o.x, o.y, o.z);
+    if (!p) continue;
+    const R = o.r * Math.min(p.k, 2) * 2.2;
+    if (p.x < -R || p.x > W + R || p.y < -R || p.y > H + R) continue;
+    const g = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, R);
     g.addColorStop(0, `rgba(205,210,225,${o.a})`);
     g.addColorStop(0.45, `rgba(190,196,214,${o.a * 0.5})`);
     g.addColorStop(1, 'rgba(190,196,214,0)');
-    ctx.beginPath(); ctx.arc(x, y, o.r * 2.2, 0, 6.283); ctx.fillStyle = g; ctx.fill();
+    ctx.beginPath(); ctx.arc(p.x, p.y, R, 0, 6.283); ctx.fillStyle = g; ctx.fill();
   }
 
-  // constellation stars float on slow, looping paths
-  for (const s of stars) {
-    if (reduce) { s.x = s.hx; s.y = s.hy; continue; }
-    s.x = s.hx + s.ax * Math.sin(t * s.wx + s.px) + s.ax * 0.4 * Math.sin(t * s.wx * 2.3 + s.py);
-    s.y = s.hy + s.ay * Math.cos(t * s.wy + s.py) + s.ay * 0.4 * Math.sin(t * s.wy * 1.9 + s.px);
-  }
+  // constellation stars drift a little in 3D, then get projected
+  sp = stars.map(s => {
+    const dx = reduce ? 0 : s.ax * Math.sin(t * s.wx + s.px) + s.ax * 0.4 * Math.sin(t * s.wx * 2.3 + s.py);
+    const dy = reduce ? 0 : s.ay * Math.cos(t * s.wy + s.py) + s.ay * 0.4 * Math.sin(t * s.wy * 1.9 + s.px);
+    const dz = reduce ? 0 : s.az * Math.sin(t * s.wz + s.pz);
+    return project(s.hx + dx, s.hy + dy, s.hz + dz);
+  });
 
-  // hover
   let hover = -1;
   if (!drag) hover = hit(mouse.x, mouse.y);
 
   // line from the panel to the star for the page you're on
   const pr = panel.getBoundingClientRect();
   const mobile = W < 700;
-  const a = stars[cur];
-  const tx = a.x + off.x, ty = a.y + off.y;
-  const px0 = mobile ? pr.left + pr.width / 2 : pr.right;
-  const py0 = mobile ? pr.top : pr.top + pr.height * 0.28;
-  {
-    const dx = tx - px0, dy = ty - py0, d = Math.hypot(dx, dy) || 1;
-    const gap = a.g * 0.5 + 6;
+  const a = sp[cur];
+  if (a) {
+    const px0 = mobile ? pr.left + pr.width / 2 : pr.right;
+    const py0 = mobile ? pr.top : pr.top + pr.height * 0.28;
+    const dx = a.x - px0, dy = a.y - py0, d = Math.hypot(dx, dy) || 1;
+    const gap = stars[cur].g * Math.min(a.k, 1.9) * 0.5 + 6;
     ctx.strokeStyle = 'rgba(201,164,60,0.5)'; ctx.lineWidth = 0.8;
     ctx.beginPath();
     ctx.moveTo(px0, py0);
-    ctx.lineTo(tx - dx / d * gap, ty - dy / d * gap);
+    ctx.lineTo(a.x - dx / d * gap, a.y - dy / d * gap);
     ctx.stroke();
   }
 
   // lines between stars, stopping short of each glow
   for (const [i, j] of EDGES) {
-    const A = stars[i], B = stars[j];
-    const ax = A.x + off.x, ay = A.y + off.y, bx = B.x + off.x, by = B.y + off.y;
-    const dx = bx - ax, dy = by - ay, d = Math.hypot(dx, dy) || 1;
-    const ga = A.g * 0.5 + 6, gb = B.g * 0.5 + 6;
+    const A = sp[i], B = sp[j];
+    if (!A || !B) continue;
+    const dx = B.x - A.x, dy = B.y - A.y, d = Math.hypot(dx, dy) || 1;
+    const ga = stars[i].g * Math.min(A.k, 1.9) * 0.5 + 6;
+    const gb = stars[j].g * Math.min(B.k, 1.9) * 0.5 + 6;
     ctx.strokeStyle = 'rgba(201,164,60,0.42)'; ctx.lineWidth = 0.8;
     ctx.beginPath();
-    ctx.moveTo(ax + dx / d * ga, ay + dy / d * ga);
-    ctx.lineTo(bx - dx / d * gb, by - dy / d * gb);
+    ctx.moveTo(A.x + dx / d * ga, A.y + dy / d * ga);
+    ctx.lineTo(B.x - dx / d * gb, B.y - dy / d * gb);
     ctx.stroke();
   }
 
-  // the stars themselves
+  // the stars: nearer ones glow bigger, farther ones smaller
   stars.forEach((s, i) => {
-    const x = s.x + off.x, y = s.y + off.y;
+    const p = sp[i];
+    if (!p) { tags[i].classList.remove('on'); return; }
+    const k = Math.max(0.55, Math.min(p.k, 1.9));
     const pulse = 0.9 + 0.1 * Math.sin(t * 0.0015 + i * 1.7);
     const boost = i === hover ? 1.28 : i === cur ? 1.1 : 1;
-    const R = s.g * pulse * boost;
-    const g = ctx.createRadialGradient(x, y, 0, x, y, R);
+    const R = s.g * k * pulse * boost;
+    const g = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, R);
     g.addColorStop(0, 'rgba(255,238,175,0.95)');
     g.addColorStop(0.12, 'rgba(250,200,80,0.75)');
     g.addColorStop(0.35, 'rgba(215,155,40,0.28)');
     g.addColorStop(1, 'rgba(200,140,40,0)');
-    ctx.beginPath(); ctx.arc(x, y, R, 0, 6.283); ctx.fillStyle = g; ctx.fill();
-    ctx.beginPath(); ctx.arc(x, y, Math.max(2.6, s.g * 0.1) * (i === hover ? 1.2 : 1), 0, 6.283);
+    ctx.beginPath(); ctx.arc(p.x, p.y, R, 0, 6.283); ctx.fillStyle = g; ctx.fill();
+    ctx.beginPath(); ctx.arc(p.x, p.y, Math.max(2.4, s.g * k * 0.1) * (i === hover ? 1.2 : 1), 0, 6.283);
     ctx.fillStyle = '#fff3c4'; ctx.fill();
 
-    tags[i].style.transform = `translate(${x}px, ${y - s.g * 0.5 - 12}px) translate(-50%, -100%)`;
+    tags[i].style.transform = `translate(${p.x}px, ${p.y - s.g * k * 0.5 - 12}px) translate(-50%, -100%)`;
     tags[i].classList.toggle('on', i === hover || i === cur);
   });
 
@@ -577,8 +617,8 @@ function frame(t) {
     const p = s.life / s.max;
     if (p >= 1) { shoots.splice(k, 1); continue; }
     const al = Math.sin(Math.PI * p);
-    const sp = Math.hypot(s.vx, s.vy);
-    const tx0 = s.x - s.vx / sp * s.len, ty0 = s.y - s.vy / sp * s.len;
+    const spd = Math.hypot(s.vx, s.vy);
+    const tx0 = s.x - s.vx / spd * s.len, ty0 = s.y - s.vy / spd * s.len;
     const lg = ctx.createLinearGradient(tx0, ty0, s.x, s.y);
     lg.addColorStop(0, 'rgba(255,235,170,0)');
     lg.addColorStop(1, `rgba(255,246,215,${0.95 * al})`);
@@ -590,6 +630,7 @@ function frame(t) {
     ctx.beginPath(); ctx.arc(s.x, s.y, 8, 0, 6.283); ctx.fillStyle = hg; ctx.fill();
   }
 
+  updateCoords();
   canvas.style.cursor = hover >= 0 ? 'pointer' : drag ? 'grabbing' : 'grab';
   requestAnimationFrame(frame);
 }
