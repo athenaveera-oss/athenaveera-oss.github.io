@@ -348,6 +348,23 @@
   #lightbox.multi .nav { display: flex; }
   #lightbox .prev { left: 2.5vw; } #lightbox .next { right: 2.5vw; }
   #lightbox .count { font-family: var(--mono); font-size: .62rem; letter-spacing: .28em; color: #8d93b8; }
+  .proj.tbg .tbg-video { position: relative; line-height: 0; }
+  .proj.tbg video { width: 100%; display: block; background: #000; border: 1px solid var(--gold-dim); border-radius: 2px; aspect-ratio: 2748 / 1752; object-fit: cover; }
+  .vbtn { position: absolute; right: 12px; bottom: 12px; padding: .45rem .8rem; font-family: var(--mono); font-size: .6rem; letter-spacing: .22em; text-transform: uppercase;
+    color: #e8c34a; background: rgba(3,5,20,.72); border: 1px solid rgba(232,195,74,.5); border-radius: 2px; cursor: pointer; line-height: 1; }
+  .tbg-row { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(.8rem, 2vw, 1.6rem); margin-top: clamp(.8rem, 2vw, 1.6rem); }
+  .scrollframe { border: 1px solid var(--gold-dim); border-radius: 2px; overflow: hidden; background: #f3f4f2; }
+  .scrollframe .bar { display: flex; align-items: center; gap: .8rem; padding: .55rem .8rem; background: linear-gradient(180deg, var(--panel-top), var(--panel-bot)); border-bottom: 1px solid var(--gold-dim); }
+  .scrollframe .bar span { display: flex; gap: 5px; }
+  .scrollframe .bar i { width: 8px; height: 8px; border-radius: 50%; background: var(--gold-dim); }
+  .scrollframe .bar em { font-style: normal; font-family: var(--mono); font-size: .6rem; letter-spacing: .22em; text-transform: uppercase; color: var(--gold); flex: 1; }
+  .scrollframe .bar a { font-family: var(--mono); font-size: .58rem; letter-spacing: .18em; text-transform: uppercase; color: var(--muted); text-decoration: none; }
+  .scrollframe .bar a:hover { color: var(--gold); }
+  .scrollframe .viewport { height: clamp(380px, 46vw, 600px); overflow-y: auto; scrollbar-width: thin; overscroll-behavior: contain; }
+  .scrollframe .viewport img { width: 100%; height: auto; display: block; aspect-ratio: auto; transition: none; }
+  .proj button.flowbtn { margin-top: clamp(.8rem, 2vw, 1.6rem); }
+  .proj .flowbtn img { aspect-ratio: auto; object-fit: contain; background: #f3f4f2; }
+  @media (max-width: 720px) { .tbg-row { grid-template-columns: 1fr; } .scrollframe .viewport { height: 420px; } }
 </style>
 </head>
 <body>
@@ -978,9 +995,23 @@ requestAnimationFrame(frame);
         </div>
         <figcaption><div class="meta">02 · Concept project · Branding</div><div class="title">Home Made</div><div class="desc">Brand identity for a home-baker delivery app in Toronto: the logo, sticker and bag packaging, and a &ldquo;find your Bread Buddy&rdquo; poster introducing the app.</div></figcaption>
       </figure>
-      <figure class="proj">
-        <button type="button" aria-label="Enlarge Toronto Botanical Garden website"><img loading="lazy" decoding="async" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1600 1000'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%2314325f'/%3E%3Cstop offset='1' stop-color='%232b5a8a'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1600' height='1000' fill='url(%23g)'/%3E%3Cg fill='none' stroke='%23e8c34a' stroke-opacity='.35'%3E%3Ccircle cx='800' cy='500' r='150'/%3E%3Ccircle cx='800' cy='500' r='230' stroke-opacity='.15'/%3E%3C/g%3E%3Ctext x='800' y='510' text-anchor='middle' font-family='Georgia,serif' font-style='italic' font-size='54' fill='%23e9e4d8' fill-opacity='.85'%3EProject image 2%3C/text%3E%3Ctext x='800' y='572' text-anchor='middle' font-family='monospace' font-size='24' letter-spacing='6' fill='%23e8c34a' fill-opacity='.7'%3EREPLACE ME %C2%B7 1600 %C3%97 1000%3C/text%3E%3C/svg%3E" alt="Toronto Botanical Garden website"></button>
-        <figcaption><div class="meta">03 · Concept project</div><div class="title">Toronto Botanical Garden website</div><div class="desc">A concept UX design for the Toronto Botanical Garden website.</div></figcaption>
+      <figure class="proj wide tbg">
+        <div class="tbg-video">
+          <video id="tbgVideo" src="tbg-prototype.mp4" poster="tbg-poster.jpg" muted loop playsinline autoplay preload="metadata" aria-label="Walkthrough of the Toronto Botanical Garden website prototype"></video>
+          <button type="button" class="vbtn" id="vbtn" aria-label="Pause video">Pause</button>
+        </div>
+        <div class="tbg-row">
+          <div class="scrollframe" data-auto>
+            <div class="bar"><span><i></i><i></i><i></i></span><em>Landing page</em><a href="tbg-landing.jpg" target="_blank" rel="noopener">Open full &nearr;</a></div>
+            <div class="viewport"><img loading="lazy" decoding="async" src="tbg-landing.jpg" alt="Full-length landing page design for the Toronto Botanical Garden website"></div>
+          </div>
+          <div class="scrollframe">
+            <div class="bar"><span><i></i><i></i><i></i></span><em>Style guide</em><a href="tbg-styleguide.jpg" target="_blank" rel="noopener">Open full &nearr;</a></div>
+            <div class="viewport"><img loading="lazy" decoding="async" src="tbg-styleguide.jpg" alt="Seasonal style guide: colours, typography, buttons and icons"></div>
+          </div>
+        </div>
+        <button type="button" class="flowbtn" aria-label="Enlarge prototype flow"><img loading="lazy" decoding="async" src="tbg-flow.jpg" alt="Prototype flow connecting nine pages of the website"></button>
+        <figcaption><div class="meta">03 · Concept project · UX / UI</div><div class="title">Toronto Botanical Garden website</div><div class="desc">A concept redesign of the Toronto Botanical Garden website: a style guide, a long-scroll landing page, and a clickable prototype that links nine pages together.</div></figcaption>
       </figure>
       <figure class="proj">
         <button type="button" aria-label="Enlarge Brandon Garden Connection"><img loading="lazy" decoding="async" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1600 1000'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%232c1f5e'/%3E%3Cstop offset='1' stop-color='%236a3d7a'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1600' height='1000' fill='url(%23g)'/%3E%3Cg fill='none' stroke='%23e8c34a' stroke-opacity='.35'%3E%3Ccircle cx='800' cy='500' r='150'/%3E%3Ccircle cx='800' cy='500' r='230' stroke-opacity='.15'/%3E%3C/g%3E%3Ctext x='800' y='510' text-anchor='middle' font-family='Georgia,serif' font-style='italic' font-size='54' fill='%23e9e4d8' fill-opacity='.85'%3EProject image 3%3C/text%3E%3Ctext x='800' y='572' text-anchor='middle' font-family='monospace' font-size='24' letter-spacing='6' fill='%23e8c34a' fill-opacity='.7'%3EREPLACE ME %C2%B7 1600 %C3%97 1000%3C/text%3E%3C/svg%3E" alt="Brandon Garden Connection"></button>
@@ -1013,6 +1044,7 @@ requestAnimationFrame(frame);
   }
   function step(d) { idx = (idx + d + set.length) % set.length; show(); }
   document.querySelectorAll('.proj button').forEach(function (b) {
+    if (!b.querySelector('img')) return;
     b.addEventListener('click', function () {
       var f = b.closest('.proj');
       set = Array.prototype.slice.call(f.querySelectorAll('button img'));
@@ -1029,6 +1061,38 @@ requestAnimationFrame(frame);
     if (e.key === 'Escape') lb.classList.remove('on');
     if (e.key === 'ArrowLeft') step(-1);
     if (e.key === 'ArrowRight') step(1);
+  });
+})();
+</script>
+<script>
+(function () {
+  var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  // video plays only while it is on screen, and can be paused
+  var v = document.getElementById('tbgVideo'), vb = document.getElementById('vbtn'), userPaused = false, visible = false;
+  function sync() { if (!v) return; if (visible && !userPaused && !reduce) { var p = v.play(); if (p && p.catch) p.catch(function () {}); } else v.pause(); vb.textContent = (v.paused ? 'Play' : 'Pause'); }
+  if (v) {
+    vb.addEventListener('click', function () { userPaused = !v.paused ? true : false; if (v.paused) userPaused = false; sync(); });
+    new IntersectionObserver(function (e) { visible = e[0].isIntersecting; sync(); }, { threshold: 0.25 }).observe(v);
+    v.addEventListener('play', sync); v.addEventListener('pause', sync);
+  }
+  // the long landing page scrolls itself slowly until you take over
+  document.querySelectorAll('.scrollframe[data-auto] .viewport').forEach(function (vp) {
+    var dir = 1, hold = 0, y = 0, on = false, user = false, last = 0;
+    function tick(t) {
+      if (!on) return;
+      var dt = Math.min(t - last, 50); last = t;
+      if (!user && !reduce) {
+        var max = vp.scrollHeight - vp.clientHeight;
+        if (hold > 0) hold -= dt;
+        else { y += dir * 0.035 * dt; if (y >= max) { y = max; dir = -1; hold = 1500; } if (y <= 0) { y = 0; dir = 1; hold = 1500; } vp.scrollTop = y; }
+      }
+      requestAnimationFrame(tick);
+    }
+    function take() { user = true; }
+    function give() { y = vp.scrollTop; user = false; }
+    ['pointerenter', 'touchstart', 'wheel'].forEach(function (ev) { vp.addEventListener(ev, take, { passive: true }); });
+    ['pointerleave', 'touchend'].forEach(function (ev) { vp.addEventListener(ev, function () { setTimeout(give, 1200); }, { passive: true }); });
+    new IntersectionObserver(function (e) { var was = on; on = e[0].isIntersecting; if (on && !was) { last = performance.now(); requestAnimationFrame(tick); } }, { threshold: 0.2 }).observe(vp);
   });
 })();
 </script>
