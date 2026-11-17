@@ -313,7 +313,7 @@
 
   #work { position: relative; z-index: 20; padding: 0 4vw 8vh; }
   .work-card { max-width: 1120px; margin: 0 auto; padding: clamp(1.6rem, 4vw, 3rem);
-    background: linear-gradient(180deg, var(--panel-top), var(--panel-bot)); border: 1px solid var(--gold-dim); border-radius: 2px; backdrop-filter: blur(4px); }
+    background: linear-gradient(180deg, var(--panel-top), var(--panel-bot)); border: 1px solid var(--gold-dim); border-radius: 2px; contain: paint; }
   .work-card > h2 { font-family: var(--serif); font-style: italic; font-weight: 400; font-size: clamp(1.9rem, 3.6vw, 2.6rem); color: var(--ink); line-height: 1.15; margin-bottom: .6rem; }
   .work-card > .lede { font-size: 1.1rem; color: var(--body); margin-bottom: 2.4rem; max-width: 40rem; }
   .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: clamp(1.6rem, 3vw, 2.6rem) clamp(1.2rem, 2.6vw, 2.2rem); }
@@ -342,6 +342,7 @@
   .proj .tag { margin-left: .6rem; padding: .12rem .5rem; border: 1px solid var(--gold-dim); border-radius: 2px; color: var(--muted); letter-spacing: .18em; }
   .proj.trip .strip { display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(.5rem, 1.2vw, 1rem); }
   .proj.trip .strip img { aspect-ratio: 1 / 1; }
+  .proj.trip.tall .strip img { aspect-ratio: 5 / 7; }
   #lightbox .nav { position: absolute; top: 50%; transform: translateY(-50%); width: 46px; height: 46px; border: 1px solid rgba(232,195,74,.5); border-radius: 50%;
     background: rgba(3,5,20,.6); color: #e8c34a; font-size: 1.3rem; cursor: pointer; display: none; align-items: center; justify-content: center; }
   #lightbox.multi .nav { display: flex; }
@@ -606,7 +607,7 @@ function applyTheme(sky) {
   const Ln = sm(0.1, 0.2, lt);                // the name at the top
   const Lc = sm(0.1, 0.18, lt);               // the clock at the top right
   const Lh = sm(0.2, 0.38, lb);               // the small text in the corners
-  const key = [Lu, Ln, Lh, Lc].map(v => v.toFixed(3)).join('|');
+  const key = [Lu, Ln, Lh, Lc].map(v => v.toFixed(2)).join('|');
   if (key === themeKey) return;
   themeKey = key;
   const M = k => css(mixA(TN[k], TD[k], Lu));
@@ -963,23 +964,27 @@ requestAnimationFrame(frame);
     <div class="grid">
       <figure class="proj wide trip" data-project="1">
         <div class="strip">
-          <button type="button" aria-label="Enlarge billboard"><img loading="lazy" src="wgyb-billboard.jpg" alt="We Got Your Back campaign poster on a construction hoarding"></button>
-          <button type="button" aria-label="Enlarge Instagram post"><img loading="lazy" src="wgyb-instagram.jpg" alt="We Got Your Back campaign as an Instagram post on a phone"></button>
-          <button type="button" aria-label="Enlarge pamphlet"><img loading="lazy" src="wgyb-pamphlet.jpg" alt="We Got Your Back campaign pamphlet"></button>
+          <button type="button" aria-label="Enlarge billboard"><img loading="lazy" decoding="async" src="wgyb-billboard.jpg" alt="We Got Your Back campaign poster on a construction hoarding"></button>
+          <button type="button" aria-label="Enlarge Instagram post"><img loading="lazy" decoding="async" src="wgyb-instagram.jpg" alt="We Got Your Back campaign as an Instagram post on a phone"></button>
+          <button type="button" aria-label="Enlarge pamphlet"><img loading="lazy" decoding="async" src="wgyb-pamphlet.jpg" alt="We Got Your Back campaign pamphlet"></button>
         </div>
         <figcaption><div class="meta">01 · Concept project</div><div class="title">We Got Your Back</div><div class="desc">A hospital care campaign built around a single warm illustration, carried across outdoor posters, social media and printed pamphlets.</div></figcaption>
       </figure>
-      <figure class="proj">
-        <button type="button" aria-label="Enlarge ARTS SIG Conference"><img loading="lazy" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1600 1000'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%2314325f'/%3E%3Cstop offset='1' stop-color='%232b5a8a'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1600' height='1000' fill='url(%23g)'/%3E%3Cg fill='none' stroke='%23e8c34a' stroke-opacity='.35'%3E%3Ccircle cx='800' cy='500' r='150'/%3E%3Ccircle cx='800' cy='500' r='230' stroke-opacity='.15'/%3E%3C/g%3E%3Ctext x='800' y='510' text-anchor='middle' font-family='Georgia,serif' font-style='italic' font-size='54' fill='%23e9e4d8' fill-opacity='.85'%3EProject image 2%3C/text%3E%3Ctext x='800' y='572' text-anchor='middle' font-family='monospace' font-size='24' letter-spacing='6' fill='%23e8c34a' fill-opacity='.7'%3EREPLACE ME %C2%B7 1600 %C3%97 1000%3C/text%3E%3C/svg%3E" alt="ARTS SIG Conference"></button>
-        <figcaption><div class="meta">02 · Concept project</div><div class="title">ARTS SIG Conference</div><div class="desc">Event organizer: programming, wayfinding and visual identity for a student-run conference.</div></figcaption>
+      <figure class="proj wide trip tall">
+        <div class="strip">
+          <button type="button" aria-label="Enlarge sticker on a bakery bag"><img loading="lazy" decoding="async" src="homemade-sticker.jpg" alt="Home Made logo as a round sticker on a brown paper bakery bag"></button>
+          <button type="button" aria-label="Enlarge packaging"><img loading="lazy" decoding="async" src="homemade-bag.jpg" alt="Home Made logo printed on a white paper bakery bag with a loaf of bread"></button>
+          <button type="button" aria-label="Enlarge app poster"><img loading="lazy" decoding="async" src="homemade-poster.jpg" alt="Find your Bread Buddy poster for the Home Made app"></button>
+        </div>
+        <figcaption><div class="meta">02 · Branding</div><div class="title">Home Made</div><div class="desc">Brand identity for a home-baker delivery app in Toronto: the logo, sticker and bag packaging, and a &ldquo;find your Bread Buddy&rdquo; poster introducing the app.</div></figcaption>
       </figure>
       <figure class="proj">
-        <button type="button" aria-label="Enlarge Nuit Blanche"><img loading="lazy" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1600 1000'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%232c1f5e'/%3E%3Cstop offset='1' stop-color='%236a3d7a'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1600' height='1000' fill='url(%23g)'/%3E%3Cg fill='none' stroke='%23e8c34a' stroke-opacity='.35'%3E%3Ccircle cx='800' cy='500' r='150'/%3E%3Ccircle cx='800' cy='500' r='230' stroke-opacity='.15'/%3E%3C/g%3E%3Ctext x='800' y='510' text-anchor='middle' font-family='Georgia,serif' font-style='italic' font-size='54' fill='%23e9e4d8' fill-opacity='.85'%3EProject image 3%3C/text%3E%3Ctext x='800' y='572' text-anchor='middle' font-family='monospace' font-size='24' letter-spacing='6' fill='%23e8c34a' fill-opacity='.7'%3EREPLACE ME %C2%B7 1600 %C3%97 1000%3C/text%3E%3C/svg%3E" alt="Nuit Blanche"></button>
-        <figcaption><div class="meta">03 · Concept project</div><div class="title">Nuit Blanche</div><div class="desc">Art interpreter for the City of Toronto, translating contemporary installations for public audiences.</div></figcaption>
+        <button type="button" aria-label="Enlarge Toronto Botanical Garden website"><img loading="lazy" decoding="async" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1600 1000'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%2314325f'/%3E%3Cstop offset='1' stop-color='%232b5a8a'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1600' height='1000' fill='url(%23g)'/%3E%3Cg fill='none' stroke='%23e8c34a' stroke-opacity='.35'%3E%3Ccircle cx='800' cy='500' r='150'/%3E%3Ccircle cx='800' cy='500' r='230' stroke-opacity='.15'/%3E%3C/g%3E%3Ctext x='800' y='510' text-anchor='middle' font-family='Georgia,serif' font-style='italic' font-size='54' fill='%23e9e4d8' fill-opacity='.85'%3EProject image 2%3C/text%3E%3Ctext x='800' y='572' text-anchor='middle' font-family='monospace' font-size='24' letter-spacing='6' fill='%23e8c34a' fill-opacity='.7'%3EREPLACE ME %C2%B7 1600 %C3%97 1000%3C/text%3E%3C/svg%3E" alt="Toronto Botanical Garden website"></button>
+        <figcaption><div class="meta">03 · Concept project</div><div class="title">Toronto Botanical Garden website</div><div class="desc">A concept UX design for the Toronto Botanical Garden website.</div></figcaption>
       </figure>
       <figure class="proj">
-        <button type="button" aria-label="Enlarge TMUTAGA Collective"><img loading="lazy" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1600 1000'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23102a50'/%3E%3Cstop offset='1' stop-color='%233a4f86'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1600' height='1000' fill='url(%23g)'/%3E%3Cg fill='none' stroke='%23e8c34a' stroke-opacity='.35'%3E%3Ccircle cx='800' cy='500' r='150'/%3E%3Ccircle cx='800' cy='500' r='230' stroke-opacity='.15'/%3E%3C/g%3E%3Ctext x='800' y='510' text-anchor='middle' font-family='Georgia,serif' font-style='italic' font-size='54' fill='%23e9e4d8' fill-opacity='.85'%3EProject image 4%3C/text%3E%3Ctext x='800' y='572' text-anchor='middle' font-family='monospace' font-size='24' letter-spacing='6' fill='%23e8c34a' fill-opacity='.7'%3EREPLACE ME %C2%B7 1600 %C3%97 1000%3C/text%3E%3C/svg%3E" alt="TMUTAGA Collective"></button>
-        <figcaption><div class="meta">04 · 2026</div><div class="title">TMUTAGA Collective</div><div class="desc">Editorial Director of the Graphic Communications Management research journal.</div></figcaption>
+        <button type="button" aria-label="Enlarge Brandon Garden Connection"><img loading="lazy" decoding="async" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1600 1000'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%232c1f5e'/%3E%3Cstop offset='1' stop-color='%236a3d7a'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1600' height='1000' fill='url(%23g)'/%3E%3Cg fill='none' stroke='%23e8c34a' stroke-opacity='.35'%3E%3Ccircle cx='800' cy='500' r='150'/%3E%3Ccircle cx='800' cy='500' r='230' stroke-opacity='.15'/%3E%3C/g%3E%3Ctext x='800' y='510' text-anchor='middle' font-family='Georgia,serif' font-style='italic' font-size='54' fill='%23e9e4d8' fill-opacity='.85'%3EProject image 3%3C/text%3E%3Ctext x='800' y='572' text-anchor='middle' font-family='monospace' font-size='24' letter-spacing='6' fill='%23e8c34a' fill-opacity='.7'%3EREPLACE ME %C2%B7 1600 %C3%97 1000%3C/text%3E%3C/svg%3E" alt="Brandon Garden Connection"></button>
+        <figcaption><div class="meta">04 · Real project · 2023</div><div class="title">Brandon Garden Connection</div><div class="desc">UX design for Brandon Parks &amp; Recreation in Brandon, Manitoba.</div></figcaption>
       </figure>
     </div>
     <div class="work-foot"><span>&copy; 2026 Athena Veerasuntharam</span><a id="toTop">Back to the sky &uarr;</a></div>
