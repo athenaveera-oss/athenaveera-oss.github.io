@@ -368,6 +368,25 @@
   .proj.trip.slides .strip { grid-template-columns: repeat(3, 1fr); }
   .proj.trip.slides .strip img { aspect-ratio: 16 / 9; }
   @media (max-width: 720px) { .proj.trip.slides .strip { grid-template-columns: repeat(2, 1fr); } }
+  .proj.trip.kusmi .strip { grid-template-columns: repeat(4, 1fr); }
+  .proj.trip.kusmi .strip img { aspect-ratio: 4 / 5; }
+  .proj.trip.kusmi .strip img.fit { object-fit: contain; background: #fff; }
+  .proj.trip.kusmi button { position: relative; }
+  .refbadge { position: absolute; left: 8px; top: 8px; padding: .25rem .5rem; font-family: var(--mono); font-size: .55rem; letter-spacing: .2em; text-transform: uppercase;
+    color: #e8c34a; background: rgba(3,5,20,.78); border: 1px solid rgba(232,195,74,.5); border-radius: 2px; line-height: 1; }
+  .proj .credit { margin-top: .6rem; font-family: var(--mono); font-size: .58rem; letter-spacing: .08em; line-height: 1.6; color: var(--muted); }
+  .proj .credit a { color: var(--gold); text-decoration: none; }
+  .proj .credit a:hover { text-decoration: underline; }
+  @media (max-width: 720px) { .proj.trip.kusmi .strip { grid-template-columns: repeat(2, 1fr); } }
+  .proj.trip.kusmi .strip button.wm { grid-column: 1 / -1; background: #222; }
+  .proj.trip.kusmi .strip .wm img { aspect-ratio: 21 / 5; object-fit: cover; background: #222; }
+  .proj.trip.kusmi .cwstack { display: block; position: relative; aspect-ratio: 4 / 5; background: #fff; }
+  .proj.trip.kusmi .cwstack img { position: absolute; inset: 0; width: 100%; height: 100%; aspect-ratio: auto; object-fit: contain; opacity: 0; transition: opacity 1.4s ease; }
+  .proj.trip.kusmi .cwstack img.on { opacity: 1; }
+  .proj.trip.kusmi button:hover .cwstack img { transform: none; }
+  .cwdots { position: absolute; left: 0; right: 0; bottom: 10px; display: flex; justify-content: center; gap: 6px; }
+  .cwdots i { width: 6px; height: 6px; border-radius: 50%; background: rgba(40,40,60,.25); transition: background .6s; }
+  .cwdots i.on { background: rgba(40,40,60,.8); }
 </style>
 </head>
 <body>
@@ -1027,6 +1046,16 @@ requestAnimationFrame(frame);
         </div>
         <figcaption><div class="meta">04 · Real project · 2023</div><div class="title">Brandon Garden Connection</div><div class="desc">UX design for Brandon Parks &amp; Recreation in Brandon, Manitoba: logo options, colour schemes, and high-fidelity app concepts for finding and reserving a community garden plot.</div></figcaption>
       </figure>
+      <figure class="proj wide trip kusmi">
+        <div class="strip">
+          <button type="button" class="wm" aria-label="Enlarge wordmark"><img loading="lazy" decoding="async" src="kusmi-wordmark.jpg" alt="Maison Kusmi wordmark in white slab-serif capitals on black"></button>
+          <button type="button" aria-label="Enlarge reference: Kusmi Tea tin"><img loading="lazy" decoding="async" src="kusmi-tin-reference.jpg" alt="Reference: Kusmi Tea Russian Morning N°24 tin"><span class="refbadge">Reference</span></button>
+          <button type="button" class="cw" aria-label="Enlarge colourway"><span class="cwstack"><img class="on" loading="lazy" decoding="async" src="kusmi-colour-red.jpg" alt="Tile design in red"><img loading="lazy" decoding="async" src="kusmi-colour-pink.jpg" alt="Tile design in magenta"><img loading="lazy" decoding="async" src="kusmi-colour-blue.jpg" alt="Tile design in blue"><img loading="lazy" decoding="async" src="kusmi-colour-teal.jpg" alt="Tile design in teal"><img loading="lazy" decoding="async" src="kusmi-colour-green.jpg" alt="Tile design in green"></span><span class="refbadge">Colourways</span><span class="cwdots"><i class="on"></i><i></i><i></i><i></i><i></i></span></button>
+          <button type="button" aria-label="Enlarge tile close-up"><img loading="lazy" decoding="async" src="kusmi-closeup.jpg" alt="Close-up of the clear-topped tiles with a blue base"></button>
+          <button type="button" aria-label="Enlarge gift box"><img loading="lazy" decoding="async" src="kusmi-box.jpg" alt="Gift box with thirty red tiles spelling MAISON KUSMI"></button>
+        </div>
+        <figcaption><div class="meta">05 · Concept project · Brand extension</div><div class="title">Maison Kusmi</div><div class="desc">A rebrand concept and brand extension for Kusmi Tea: a premium gift box of collectible tiles that spell out MAISON KUSMI, built from the brand&rsquo;s signature red and floral border, shown in five colourways.</div><div class="credit">Reference image: <a href="https://www.kusmitea.com/en/products/russian-morning-n24" target="_blank" rel="noopener">Kusmi Tea, Russian Morning N&deg;24 tin</a>. &copy; Kusmi Tea. Kusmi Tea is not affiliated with this student concept.</div></figcaption>
+      </figure>
     </div>
     <div class="work-foot"><span>&copy; 2026 Athena Veerasuntharam</span><a id="toTop">Back to the sky &uarr;</a></div>
   </div>
@@ -1058,7 +1087,7 @@ requestAnimationFrame(frame);
     b.addEventListener('click', function () {
       var f = b.closest('.proj');
       set = Array.prototype.slice.call(f.querySelectorAll('button img'));
-      idx = set.indexOf(b.querySelector('img')); show(); lb.classList.add('on');
+      idx = set.indexOf(b.querySelector('img.on') || b.querySelector('img')); show(); lb.classList.add('on');
     });
   });
   lb.addEventListener('click', function (e) {
@@ -1104,6 +1133,18 @@ requestAnimationFrame(frame);
     ['pointerleave', 'touchend'].forEach(function (ev) { vp.addEventListener(ev, function () { setTimeout(give, 1200); }, { passive: true }); });
     new IntersectionObserver(function (e) { var was = on; on = e[0].isIntersecting; if (on && !was) { last = performance.now(); requestAnimationFrame(tick); } }, { threshold: 0.2 }).observe(vp);
   });
+})();
+</script>
+<script>
+(function () {
+  var cw = document.querySelector('.cwstack'); if (!cw) return;
+  var imgs = cw.querySelectorAll('img'), dots = cw.parentNode.querySelectorAll('.cwdots i'), n = 0, timer = null;
+  var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function step() { imgs[n].classList.remove('on'); dots[n].classList.remove('on'); n = (n + 1) % imgs.length; imgs[n].classList.add('on'); dots[n].classList.add('on'); }
+  new IntersectionObserver(function (e) {
+    if (e[0].isIntersecting && !reduce) { if (!timer) timer = setInterval(step, 2600); }
+    else { clearInterval(timer); timer = null; }
+  }, { threshold: 0.3 }).observe(cw);
 })();
 </script>
 </body>
