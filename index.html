@@ -375,6 +375,8 @@
   .refbadge { position: absolute; left: 8px; top: 8px; padding: .25rem .5rem; font-family: var(--mono); font-size: .55rem; letter-spacing: .2em; text-transform: uppercase;
     color: #e8c34a; background: rgba(3,5,20,.78); border: 1px solid rgba(232,195,74,.5); border-radius: 2px; line-height: 1; }
   .proj .credit { margin-top: .6rem; font-family: var(--mono); font-size: .58rem; letter-spacing: .08em; line-height: 1.6; color: var(--muted); }
+  .proj.tdot .tvid { position: relative; line-height: 0; }
+  .proj.tdot video { width: 100%; display: block; background: #000; border: 1px solid var(--gold-dim); border-radius: 2px; aspect-ratio: 16 / 9; object-fit: cover; }
   .proj .credit a { color: var(--gold); text-decoration: none; }
   .proj .credit a:hover { text-decoration: underline; }
   @media (max-width: 720px) { .proj.trip.kusmi .strip { grid-template-columns: repeat(2, 1fr); } }
@@ -1047,6 +1049,13 @@ requestAnimationFrame(frame);
         </div>
         <figcaption><div class="meta">02 · Real project · 2023</div><div class="title">Brandon Garden Connection</div><div class="desc">UX design for Brandon Parks &amp; Recreation in Brandon, Manitoba: logo options, colour schemes, and high-fidelity app concepts for finding and reserving a community garden plot.</div></figcaption>
       </figure>
+      <figure class="proj wide tdot">
+        <div class="tvid">
+          <video id="tdotVideo" src="tdot-ecosystem.mp4" poster="tdot-poster.jpg" muted loop playsinline autoplay preload="metadata" aria-label="Animated diagram of the T Dot ecosystem: six stages from empathize on Instagram to test with users, with feedback loops back to the start"></video>
+          <button type="button" class="vbtn" id="tdotBtn" aria-label="Pause video">Pause</button>
+        </div>
+        <figcaption><div class="meta">03 &middot; Concept project &middot; Group project &middot; Project Manager &middot; Fall 2026</div><div class="title">T Dot Consulting: the ecosystem</div><div class="desc">T Dot is a student-led consulting company researching the needs of visually impaired people in Toronto. The ecosystem brings our grassroots community&rsquo;s needs, heard on Instagram, to our corporate clients through the website, to improve wayfinding for visually impaired people. As Project Manager, I led the team and designed this final solution: six stages from empathize to test, with feedback loops back to the start.</div></figcaption>
+      </figure>
       <h3 class="group">Branding &amp; campaigns</h3>
       <figure class="proj wide trip" data-project="1">
         <div class="strip">
@@ -1054,7 +1063,7 @@ requestAnimationFrame(frame);
           <button type="button" aria-label="Enlarge Instagram post"><img loading="lazy" decoding="async" src="wgyb-instagram.jpg" alt="We Got Your Back campaign as an Instagram post on a phone"></button>
           <button type="button" aria-label="Enlarge pamphlet"><img loading="lazy" decoding="async" src="wgyb-pamphlet.jpg" alt="We Got Your Back campaign pamphlet"></button>
         </div>
-        <figcaption><div class="meta">03 · Concept project</div><div class="title">We Got Your Back</div><div class="desc">A hospital care campaign built around a single warm illustration, carried across outdoor posters, social media and printed pamphlets.</div></figcaption>
+        <figcaption><div class="meta">04 · Concept project</div><div class="title">We Got Your Back</div><div class="desc">A hospital care campaign built around a single warm illustration, carried across outdoor posters, social media and printed pamphlets.</div></figcaption>
       </figure>
       <figure class="proj wide trip tall">
         <div class="strip">
@@ -1062,7 +1071,7 @@ requestAnimationFrame(frame);
           <button type="button" aria-label="Enlarge packaging"><img loading="lazy" decoding="async" src="homemade-bag.jpg" alt="Home Made logo printed on a white paper bakery bag with a loaf of bread"></button>
           <button type="button" aria-label="Enlarge app poster"><img loading="lazy" decoding="async" src="homemade-poster.jpg" alt="Find your Bread Buddy poster for the Home Made app"></button>
         </div>
-        <figcaption><div class="meta">04 · Concept project · Branding</div><div class="title">Home Made</div><div class="desc">Brand identity for a home-baker delivery app in Toronto: the logo, sticker and bag packaging, and a &ldquo;find your Bread Buddy&rdquo; poster introducing the app.</div></figcaption>
+        <figcaption><div class="meta">05 · Concept project · Branding</div><div class="title">Home Made</div><div class="desc">Brand identity for a home-baker delivery app in Toronto: the logo, sticker and bag packaging, and a &ldquo;find your Bread Buddy&rdquo; poster introducing the app.</div></figcaption>
       </figure>
       <figure class="proj wide trip kusmi">
         <div class="strip">
@@ -1072,7 +1081,7 @@ requestAnimationFrame(frame);
           <button type="button" aria-label="Enlarge tile close-up"><img loading="lazy" decoding="async" src="kusmi-closeup.jpg" alt="Close-up of the clear-topped tiles with a blue base"></button>
           <button type="button" aria-label="Enlarge gift box"><img loading="lazy" decoding="async" src="kusmi-box.jpg" alt="Gift box with thirty red tiles spelling MAISON KUSMI"></button>
         </div>
-        <figcaption><div class="meta">05 · Concept project · Brand extension</div><div class="title">Maison Kusmi</div><div class="desc">A rebrand concept and brand extension for Kusmi Tea: a premium gift box of collectible tiles that spell out MAISON KUSMI, built from the brand&rsquo;s signature red and floral border, shown in five colourways.</div><div class="credit">Reference image: <a href="https://www.kusmitea.com/en/products/russian-morning-n24" target="_blank" rel="noopener">Kusmi Tea, Russian Morning N&deg;24 tin</a>. &copy; Kusmi Tea. Kusmi Tea is not affiliated with this student concept.</div></figcaption>
+        <figcaption><div class="meta">06 · Concept project · Brand extension</div><div class="title">Maison Kusmi</div><div class="desc">A rebrand concept and brand extension for Kusmi Tea: a premium gift box of collectible tiles that spell out MAISON KUSMI, built from the brand&rsquo;s signature red and floral border, shown in five colourways.</div><div class="credit">Reference image: <a href="https://www.kusmitea.com/en/products/russian-morning-n24" target="_blank" rel="noopener">Kusmi Tea, Russian Morning N&deg;24 tin</a>. &copy; Kusmi Tea. Kusmi Tea is not affiliated with this student concept.</div></figcaption>
       </figure>
 
     </div>
@@ -1132,6 +1141,13 @@ requestAnimationFrame(frame);
     vb.addEventListener('click', function () { userPaused = !v.paused ? true : false; if (v.paused) userPaused = false; sync(); });
     new IntersectionObserver(function (e) { visible = e[0].isIntersecting; sync(); }, { threshold: 0.25 }).observe(v);
     v.addEventListener('play', sync); v.addEventListener('pause', sync);
+  }
+  var tv = document.getElementById('tdotVideo'), tb = document.getElementById('tdotBtn'), tPaused = false, tVis = false;
+  function tsync() { if (!tv) return; if (tVis && !tPaused && !reduce) { var p = tv.play(); if (p && p.catch) p.catch(function () {}); } else tv.pause(); tb.textContent = (tv.paused ? 'Play' : 'Pause'); }
+  if (tv) {
+    tb.addEventListener('click', function () { tPaused = !tv.paused; tsync(); });
+    new IntersectionObserver(function (e) { tVis = e[0].isIntersecting; tsync(); }, { threshold: 0.25 }).observe(tv);
+    tv.addEventListener('play', tsync); tv.addEventListener('pause', tsync);
   }
   // the long landing page scrolls itself slowly until you take over
   document.querySelectorAll('.scrollframe[data-auto] .viewport').forEach(function (vp) {
