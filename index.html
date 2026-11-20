@@ -387,6 +387,21 @@
   .cwdots { position: absolute; left: 0; right: 0; bottom: 10px; display: flex; justify-content: center; gap: 6px; }
   .cwdots i { width: 6px; height: 6px; border-radius: 50%; background: rgba(40,40,60,.25); transition: background .6s; }
   .cwdots i.on { background: rgba(40,40,60,.8); }
+  .scroll-cta { position: fixed; left: 50%; bottom: 4vh; transform: translateX(-50%); z-index: 12; display: flex; align-items: center; gap: .9rem;
+    padding: .95rem 1.7rem; cursor: pointer; font-family: var(--mono); font-size: .78rem; letter-spacing: .28em; text-transform: uppercase;
+    color: var(--ink); background: linear-gradient(180deg, var(--panel-top), var(--panel-bot)); border: 1px solid var(--gold); border-radius: 999px;
+    box-shadow: 0 0 22px rgba(232,195,74,.28); animation: ctaPulse 2.4s ease-out infinite; transition: opacity .25s ease, box-shadow .25s ease; }
+  .scroll-cta:hover { box-shadow: 0 0 30px rgba(232,195,74,.5); }
+  .scroll-cta .arr { display: inline-block; font-size: 1.15rem; line-height: 1; color: var(--gold); animation: bob 1.6s ease-in-out infinite; }
+  @keyframes ctaPulse { 0% { box-shadow: 0 0 0 0 rgba(232,195,74,.5), 0 0 22px rgba(232,195,74,.28); } 70%, 100% { box-shadow: 0 0 0 16px rgba(232,195,74,0), 0 0 22px rgba(232,195,74,.28); } }
+  @media (max-width: 720px) { .scroll-cta { bottom: 2.2vh; padding: .7rem 1.3rem; font-size: .66rem; } .panel { bottom: 10.5vh; max-height: 60vh; } }
+  @media (prefers-reduced-motion: reduce) { .scroll-cta, .scroll-cta .arr { animation: none; } }
+  .work-card h3.group { grid-column: 1 / -1; display: flex; align-items: center; gap: 1rem; margin: .4rem 0 -.2rem; font-family: var(--mono); font-weight: 400;
+    font-size: .68rem; letter-spacing: .3em; text-transform: uppercase; color: var(--gold); }
+  .work-card h3.group::after { content: ''; flex: 1; height: 1px; background: var(--rule); }
+  .worklink { display: inline-block; margin-top: .3rem; padding: .55rem 1rem; font-family: var(--mono); font-size: .62rem; letter-spacing: .24em; text-transform: uppercase; color: var(--gold);
+    border: 1px solid var(--gold-dim); border-radius: 999px; text-decoration: none; cursor: pointer; }
+  .worklink:hover { border-color: var(--gold); }
 </style>
 </head>
 <body>
@@ -434,6 +449,7 @@
           <span class="meta">Toronto, ON · May 2025</span></li>
         <li>I'm a <em>City of Toronto cultural events volunteer</em>, and I was an <em>art interpreter at Nuit Blanche</em>.</li>
       </ul>
+      <a class="worklink" href="#work" data-goto="work">See my design portfolio &darr;</a>
     </section>
 
     <section class="page">
@@ -993,30 +1009,15 @@ function frame(t) {
 requestAnimationFrame(frame);
 </script>
 <div class="hero-spacer" aria-hidden="true"></div>
-<div class="scroll-hint" id="scrollHint">Scroll for work<span>&darr;</span></div>
+<button type="button" class="scroll-cta" id="scrollHint" aria-label="Scroll down to my portfolio"><span class="txt">View my work</span><span class="arr" aria-hidden="true">&darr;</span></button>
 
 <section id="work">
   <div class="work-card">
     <div class="label"><i></i>Selected work</div>
     <h2>A few things I've made.</h2>
-    <p class="lede">Design, research and editorial projects. Click any image to see it larger.</p>
+    <p class="lede">UX / UI design first, then branding and campaigns. Click any image to see it larger.</p>
     <div class="grid">
-      <figure class="proj wide trip" data-project="1">
-        <div class="strip">
-          <button type="button" aria-label="Enlarge billboard"><img loading="lazy" decoding="async" src="wgyb-billboard.jpg" alt="We Got Your Back campaign poster on a construction hoarding"></button>
-          <button type="button" aria-label="Enlarge Instagram post"><img loading="lazy" decoding="async" src="wgyb-instagram.jpg" alt="We Got Your Back campaign as an Instagram post on a phone"></button>
-          <button type="button" aria-label="Enlarge pamphlet"><img loading="lazy" decoding="async" src="wgyb-pamphlet.jpg" alt="We Got Your Back campaign pamphlet"></button>
-        </div>
-        <figcaption><div class="meta">01 · Concept project</div><div class="title">We Got Your Back</div><div class="desc">A hospital care campaign built around a single warm illustration, carried across outdoor posters, social media and printed pamphlets.</div></figcaption>
-      </figure>
-      <figure class="proj wide trip tall">
-        <div class="strip">
-          <button type="button" aria-label="Enlarge sticker on a bakery bag"><img loading="lazy" decoding="async" src="homemade-sticker.jpg" alt="Home Made logo as a round sticker on a brown paper bakery bag"></button>
-          <button type="button" aria-label="Enlarge packaging"><img loading="lazy" decoding="async" src="homemade-bag.jpg" alt="Home Made logo printed on a white paper bakery bag with a loaf of bread"></button>
-          <button type="button" aria-label="Enlarge app poster"><img loading="lazy" decoding="async" src="homemade-poster.jpg" alt="Find your Bread Buddy poster for the Home Made app"></button>
-        </div>
-        <figcaption><div class="meta">02 · Concept project · Branding</div><div class="title">Home Made</div><div class="desc">Brand identity for a home-baker delivery app in Toronto: the logo, sticker and bag packaging, and a &ldquo;find your Bread Buddy&rdquo; poster introducing the app.</div></figcaption>
-      </figure>
+      <h3 class="group">UX / UI design</h3>
       <figure class="proj wide tbg">
         <div class="tbg-video">
           <video id="tbgVideo" src="tbg-prototype.mp4" poster="tbg-poster.jpg" muted loop playsinline autoplay preload="metadata" aria-label="Walkthrough of the Toronto Botanical Garden website prototype"></video>
@@ -1033,7 +1034,7 @@ requestAnimationFrame(frame);
           </div>
         </div>
         <button type="button" class="flowbtn" aria-label="Enlarge prototype flow"><img loading="lazy" decoding="async" src="tbg-flow.jpg" alt="Prototype flow connecting nine pages of the website"></button>
-        <figcaption><div class="meta">03 · Concept project · UX / UI</div><div class="title">Toronto Botanical Garden website</div><div class="desc">A concept redesign of the Toronto Botanical Garden website: a style guide, a long-scroll landing page, and a clickable prototype that links nine pages together.</div></figcaption>
+        <figcaption><div class="meta">01 · Concept project · UX / UI</div><div class="title">Toronto Botanical Garden website</div><div class="desc">A concept redesign of the Toronto Botanical Garden website: a style guide, a long-scroll landing page, and a clickable prototype that links nine pages together.</div></figcaption>
       </figure>
       <figure class="proj wide trip slides">
         <div class="strip">
@@ -1044,7 +1045,24 @@ requestAnimationFrame(frame);
           <button type="button" aria-label="Enlarge App concept in bright yellow and white"><img loading="lazy" decoding="async" src="bgc-app-yellow.jpg" alt="App concept in bright yellow and white"></button>
           <button type="button" aria-label="Enlarge Dark mode app concept in yellow and near-black"><img loading="lazy" decoding="async" src="bgc-app-dark.jpg" alt="Dark mode app concept in yellow and near-black"></button>
         </div>
-        <figcaption><div class="meta">04 · Real project · 2023</div><div class="title">Brandon Garden Connection</div><div class="desc">UX design for Brandon Parks &amp; Recreation in Brandon, Manitoba: logo options, colour schemes, and high-fidelity app concepts for finding and reserving a community garden plot.</div></figcaption>
+        <figcaption><div class="meta">02 · Real project · 2023</div><div class="title">Brandon Garden Connection</div><div class="desc">UX design for Brandon Parks &amp; Recreation in Brandon, Manitoba: logo options, colour schemes, and high-fidelity app concepts for finding and reserving a community garden plot.</div></figcaption>
+      </figure>
+      <h3 class="group">Branding &amp; campaigns</h3>
+      <figure class="proj wide trip" data-project="1">
+        <div class="strip">
+          <button type="button" aria-label="Enlarge billboard"><img loading="lazy" decoding="async" src="wgyb-billboard.jpg" alt="We Got Your Back campaign poster on a construction hoarding"></button>
+          <button type="button" aria-label="Enlarge Instagram post"><img loading="lazy" decoding="async" src="wgyb-instagram.jpg" alt="We Got Your Back campaign as an Instagram post on a phone"></button>
+          <button type="button" aria-label="Enlarge pamphlet"><img loading="lazy" decoding="async" src="wgyb-pamphlet.jpg" alt="We Got Your Back campaign pamphlet"></button>
+        </div>
+        <figcaption><div class="meta">03 · Concept project</div><div class="title">We Got Your Back</div><div class="desc">A hospital care campaign built around a single warm illustration, carried across outdoor posters, social media and printed pamphlets.</div></figcaption>
+      </figure>
+      <figure class="proj wide trip tall">
+        <div class="strip">
+          <button type="button" aria-label="Enlarge sticker on a bakery bag"><img loading="lazy" decoding="async" src="homemade-sticker.jpg" alt="Home Made logo as a round sticker on a brown paper bakery bag"></button>
+          <button type="button" aria-label="Enlarge packaging"><img loading="lazy" decoding="async" src="homemade-bag.jpg" alt="Home Made logo printed on a white paper bakery bag with a loaf of bread"></button>
+          <button type="button" aria-label="Enlarge app poster"><img loading="lazy" decoding="async" src="homemade-poster.jpg" alt="Find your Bread Buddy poster for the Home Made app"></button>
+        </div>
+        <figcaption><div class="meta">04 · Concept project · Branding</div><div class="title">Home Made</div><div class="desc">Brand identity for a home-baker delivery app in Toronto: the logo, sticker and bag packaging, and a &ldquo;find your Bread Buddy&rdquo; poster introducing the app.</div></figcaption>
       </figure>
       <figure class="proj wide trip kusmi">
         <div class="strip">
@@ -1056,6 +1074,7 @@ requestAnimationFrame(frame);
         </div>
         <figcaption><div class="meta">05 · Concept project · Brand extension</div><div class="title">Maison Kusmi</div><div class="desc">A rebrand concept and brand extension for Kusmi Tea: a premium gift box of collectible tiles that spell out MAISON KUSMI, built from the brand&rsquo;s signature red and floral border, shown in five colourways.</div><div class="credit">Reference image: <a href="https://www.kusmitea.com/en/products/russian-morning-n24" target="_blank" rel="noopener">Kusmi Tea, Russian Morning N&deg;24 tin</a>. &copy; Kusmi Tea. Kusmi Tea is not affiliated with this student concept.</div></figcaption>
       </figure>
+
     </div>
     <div class="work-foot"><span>&copy; 2026 Athena Veerasuntharam</span><a id="toTop">Back to the sky &uarr;</a></div>
   </div>
@@ -1145,6 +1164,13 @@ requestAnimationFrame(frame);
     if (e[0].isIntersecting && !reduce) { if (!timer) timer = setInterval(step, 2600); }
     else { clearInterval(timer); timer = null; }
   }, { threshold: 0.3 }).observe(cw);
+})();
+</script>
+<script>
+(function () {
+  function go(e) { var w = document.getElementById('work'); if (!w) return; if (e) e.preventDefault(); w.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+  var b = document.getElementById('scrollHint'); if (b) b.addEventListener('click', go);
+  document.querySelectorAll('[data-goto="work"]').forEach(function (a) { a.addEventListener('click', go); });
 })();
 </script>
 </body>
